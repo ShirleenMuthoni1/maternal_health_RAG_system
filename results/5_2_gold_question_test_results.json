@@ -1,0 +1,365 @@
+[
+    {
+        "question": "How many antenatal care visits does WHO recommend during pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_ANC_002_0"
+        ],
+        "generated_answer": "The WHO recommends a minimum of eight contacts between a pregnant woman and a health provider during pregnancy.",
+        "retrieved_chunk_ids": [
+            "DOC_ANC_002_0",
+            "DOC_ANC_001_0",
+            "DOC_BP_133_0"
+        ]
+    },
+    {
+        "question": "How is preeclampsia diagnosed?",
+        "expected_chunk_ids": [
+            "DOC_PRE_032_0"
+        ],
+        "generated_answer": "Preeclampsia is clinically diagnosed by the onset of hypertension (blood pressure \u2265140/90 mmHg) and proteinuria (protein in the urine) or end-organ dysfunction after 20 weeks of gestation.",
+        "retrieved_chunk_ids": [
+            "DOC_PRE_031_0",
+            "DOC_PRE_032_0",
+            "DOC_PRE_033_0"
+        ]
+    },
+    {
+        "question": "What causes gestational diabetes?",
+        "expected_chunk_ids": [
+            "DOC_GDM_066_0"
+        ],
+        "generated_answer": "Gestational diabetes is caused by the pancreas not being able to produce enough insulin to meet the increased demands of pregnancy. During gestation, hormones released by the placenta cause insulin resistance by blocking how the mother's body uses insulin, leading to elevated blood sugar levels if the body cannot compensate.",
+        "retrieved_chunk_ids": [
+            "DOC_GDM_066_0",
+            "DOC_GDM_067_0",
+            "DOC_GDM_065_0"
+        ]
+    },
+    {
+        "question": "How common is intimate partner violence during pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_IPV_163_0"
+        ],
+        "generated_answer": "Intimate partner violence during pregnancy affects over 300,000 women globally.",
+        "retrieved_chunk_ids": [
+            "DOC_IPV_163_0",
+            "DOC_IPV_161_0",
+            "DOC_IPV_162_0"
+        ]
+    },
+    {
+        "question": "What are the early signs that labor is starting?",
+        "expected_chunk_ids": [
+            "DOC_LAB_144_0",
+            "DOC_LAB_145_0"
+        ],
+        "generated_answer": "The early signs that labor is starting include common early physical indicators that the cervix and body are preparing for birth, digestive shifts like loose stools, mild diarrhea, nausea, or a sudden decrease in appetite, and intense pelvic pressure with a heavy downward sensation as the baby moves deeper into the pelvic structure and birth canal.",
+        "retrieved_chunk_ids": [
+            "DOC_LAB_144_0",
+            "DOC_LAB_149_0",
+            "DOC_LAB_158_0"
+        ]
+    },
+    {
+        "question": "What pre-existing health conditions can make a pregnancy high-risk?",
+        "expected_chunk_ids": [
+            "DOC_HRP_177_0",
+            "DOC_PRE_034_0",
+            "DOC_PRE_035_0"
+        ],
+        "generated_answer": "Pre-existing health conditions that can make a pregnancy high-risk include chronic hypertension, pre-gestational diabetes, and renal disease.",
+        "retrieved_chunk_ids": [
+            "DOC_PRE_034_0",
+            "DOC_HRP_176_0",
+            "DOC_PRE_035_0"
+        ]
+    },
+    {
+        "question": "How is Group B Streptococcus detected during pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_INF_085_0"
+        ],
+        "generated_answer": "Group B Streptococcus is detected during pregnancy using a vaginal-rectal swab between 36 and 37 weeks of gestation.",
+        "retrieved_chunk_ids": [
+            "DOC_INF_085_0",
+            "DOC_INF_097_0",
+            "DOC_INF_084_0"
+        ]
+    },
+    {
+        "question": "What is newborn sepsis?",
+        "expected_chunk_ids": [
+            "DOC_NI_206_0"
+        ],
+        "generated_answer": "Newborn sepsis is a dangerous, life-threatening bloodstream infection caused by bacteria, viruses, or fungi. It is divided into early onset sepsis, which starts in the first three days of life from germs passed during birth, and late onset sepsis, which develops after three days from hospital or home exposure. Premature babies and infants with low birth weight face the highest risk. Common warning signs include listlessness, poor feeding, pale or grayish skin, unstable body temperature, rapid breathing, vomiting, and seizures. Doctors diagnose sepsis using blood cultures and spinal taps. Treatment requires immediate intravenous antibiotics, oxygen, intravenous fluids, and close monitoring in a hospital.",
+        "retrieved_chunk_ids": [
+            "DOC_NI_206_0",
+            "DOC_INF_095_0",
+            "DOC_INF_094_0"
+        ]
+    },
+    {
+        "question": "What does a high fever with severe headache after childbirth indicate?",
+        "expected_chunk_ids": [
+            "DOC_POST_138_0"
+        ],
+        "generated_answer": "A high fever with severe headache after childbirth can indicate serious postpartum hypertension or dangerous uterine and systemic infections, requiring urgent medical evaluation and treatment at a health facility.",
+        "retrieved_chunk_ids": [
+            "DOC_POST_138_0",
+            "DOC_DS_023_0",
+            "DOC_INF_095_0"
+        ]
+    },
+    {
+        "question": "What should be included in a birth preparedness plan?",
+        "expected_chunk_ids": [
+            "DOC_BP_126_0"
+        ],
+        "generated_answer": "A complete birth preparedness plan should include choosing a specific health facility for delivery and arranging reliable transportation ahead of time. Identifying a preferred health center and organizing emergency travel options early ensures a mother can travel quickly when labor starts or if urgent medical complications develop.",
+        "retrieved_chunk_ids": [
+            "DOC_BP_126_0",
+            "DOC_BP_123_0",
+            "DOC_BP_125_0"
+        ]
+    },
+    {
+        "question": "How much iron should a pregnant woman take daily?",
+        "expected_chunk_ids": [
+            "DOC_IFA_120_0"
+        ],
+        "generated_answer": "A pregnant woman should take 30-60 mg of elemental iron daily.",
+        "retrieved_chunk_ids": [
+            "DOC_IFA_120_0",
+            "DOC_ANC_004_0",
+            "DOC_NUT_108_0"
+        ]
+    },
+    {
+        "question": "What is the most common cause of postpartum hemorrhage?",
+        "expected_chunk_ids": [
+            "DOC_PPH_054_0"
+        ],
+        "generated_answer": "The most common cause of postpartum hemorrhage is uterine atony, responsible for up to eighty percent of cases.",
+        "retrieved_chunk_ids": [
+            "DOC_PPH_054_0",
+            "DOC_PPH_055_0",
+            "DOC_PPH_058_0"
+        ]
+    },
+    {
+        "question": "Is swelling of the feet and ankles during pregnancy dangerous?",
+        "expected_chunk_ids": [
+            "DOC_DS_024_0"
+        ],
+        "generated_answer": "Mild swelling of the feet and ankles is common and normal in pregnancy, especially later in the day and in the third trimester, and usually eases with rest and leg elevation. However, it becomes a danger sign when it is sudden, severe, or affects the face and hands, particularly after 20 weeks, and does not improve with rest. This kind of swelling can be a sign of preeclampsia, especially when it appears together with a severe headache, blurred vision, or pain under the ribs. Therefore, swelling of the feet and ankles during pregnancy can be dangerous if it meets these criteria.",
+        "retrieved_chunk_ids": [
+            "DOC_DS_024_0",
+            "DOC_ANC_014_0",
+            "DOC_PRE_038_0"
+        ]
+    },
+    {
+        "question": "How should the umbilical cord stump be cared for?",
+        "expected_chunk_ids": [
+            "DOC_NEIC_199_0"
+        ],
+        "generated_answer": "The umbilical cord stump should be kept clean and completely dry, without applying any oils, ointments, powders, or traditional substances.",
+        "retrieved_chunk_ids": [
+            "DOC_NEIC_199_0",
+            "DOC_PPH_062_0",
+            "DOC_PPH_056_0"
+        ]
+    },
+    {
+        "question": "What can relieve heartburn during pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_ANC_010_0"
+        ],
+        "generated_answer": "Diet and lifestyle advice is recommended first for preventing and relieving heartburn in pregnancy. This includes avoiding large or fatty meals and alcohol, stopping smoking, and raising the head of the bed while sleeping. If symptoms persist, antacid preparations (such as magnesium carbonate or aluminium hydroxide) can be offered and are considered unlikely to cause harm at recommended doses.",
+        "retrieved_chunk_ids": [
+            "DOC_ANC_010_0",
+            "DOC_ANC_009_0",
+            "DOC_NUT_117_0"
+        ]
+    },
+    {
+        "question": "Why should pregnant women carry their own case notes?",
+        "expected_chunk_ids": [
+            "DOC_ANC_015_0"
+        ],
+        "generated_answer": "Pregnant women should carry their own case notes to improve continuity and quality of care and their overall pregnancy experience. Women who carry their own notes report greater access to pregnancy-related information and a stronger sense of involvement in their own care.",
+        "retrieved_chunk_ids": [
+            "DOC_ANC_015_0",
+            "DOC_BP_125_0",
+            "DOC_BP_128_0"
+        ]
+    },
+    {
+        "question": "What is a midwife-led continuity-of-care model?",
+        "expected_chunk_ids": [
+            "DOC_ANC_016_0"
+        ],
+        "generated_answer": "A midwife-led continuity-of-care model is a model where a known midwife or small group of known midwives supports a woman through pregnancy, birth, and the postnatal period. This model requires enough trained midwives for each woman to see the same one or two providers throughout. It is recommended in settings with well-functioning midwifery programmes and is not recommended as a starting point in settings without an already well-functioning midwifery workforce; those settings should focus first on scaling up midwife numbers and quality.",
+        "retrieved_chunk_ids": [
+            "DOC_ANC_016_0",
+            "DOC_ANC_002_0",
+            "DOC_ANC_008_0"
+        ]
+    },
+    {
+        "question": "Why is iron important during pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_NUT_108_0"
+        ],
+        "generated_answer": "Iron is important during pregnancy because it is required for maternal hemoglobin production, red blood cell synthesis, and fetal oxygen supply. Severe iron deficiency can lead to maternal anemia, increased fatigue, heightened risk of infection, impaired fetal growth, and higher susceptibility to severe complications during childbirth such as postpartum hemorrhage and low birth weight.",
+        "retrieved_chunk_ids": [
+            "DOC_NUT_108_0",
+            "DOC_NUT_107_0",
+            "DOC_IFA_118_0"
+        ]
+    },
+    {
+        "question": "When should folic acid supplementation begin during pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_IFA_122_0"
+        ],
+        "generated_answer": "Folic acid supplementation should ideally begin before getting pregnant or as early as possible during the first weeks of pregnancy.",
+        "retrieved_chunk_ids": [
+            "DOC_IFA_122_0",
+            "DOC_NUT_109_0",
+            "DOC_IFA_121_0"
+        ]
+    },
+    {
+        "question": "What is eclampsia and how does it relate to preeclampsia?",
+        "expected_chunk_ids": [
+            "DOC_PRE_033_0"
+        ],
+        "generated_answer": "Eclampsia is a severe, life-threatening complication characterized by the onset of generalized seizures (convulsions) or coma in a pregnant or postpartum woman with pre-eclampsia. It relates to preeclampsia as it is a progression of the latter if not properly managed.",
+        "retrieved_chunk_ids": [
+            "DOC_PRE_033_0",
+            "DOC_PRE_032_0",
+            "DOC_PRE_031_0"
+        ]
+    },
+    {
+        "question": "What medication is used to prevent seizures in severe preeclampsia?",
+        "expected_chunk_ids": [
+            "DOC_PRE_042_0"
+        ],
+        "generated_answer": "Magnesium sulfate is the main medicine used to prevent and treat seizures (fits) in women with severe preeclampsia.",
+        "retrieved_chunk_ids": [
+            "DOC_PRE_042_0",
+            "DOC_PRE_043_0",
+            "DOC_DS_020_0"
+        ]
+    },
+    {
+        "question": "What breathing problems after childbirth should prompt urgent care?",
+        "expected_chunk_ids": [
+            "DOC_POST_137_0"
+        ],
+        "generated_answer": "Fast or difficult breathing, chest pain, or painful swelling and redness in the legs after childbirth should prompt urgent care.",
+        "retrieved_chunk_ids": [
+            "DOC_DS_021_0",
+            "DOC_POST_137_0",
+            "DOC_NIC_208_0"
+        ]
+    },
+    {
+        "question": "What urinary symptoms after childbirth need medical attention?",
+        "expected_chunk_ids": [
+            "DOC_POST_140_0"
+        ],
+        "generated_answer": "Pain or difficulty when urinating, inability to control urine, worsening pain in the perineum area, or red, swollen, and leaking delivery wounds are urinary symptoms after childbirth that need medical attention.",
+        "retrieved_chunk_ids": [
+            "DOC_POST_140_0",
+            "DOC_POST_137_0",
+            "DOC_POST_141_0"
+        ]
+    },
+    {
+        "question": "How can leg cramps during pregnancy be relieved?",
+        "expected_chunk_ids": [
+            "DOC_ANC_011_0"
+        ],
+        "generated_answer": "Leg cramps during pregnancy can be relieved using magnesium, calcium, or non-pharmacological approaches, based on a woman's preferences and what's available. However, there is currently no strong evidence for non-drug approaches such as stretching, heat therapy, or massage, though they are commonly tried.",
+        "retrieved_chunk_ids": [
+            "DOC_ANC_011_0",
+            "DOC_LAB_145_0",
+            "DOC_ANC_012_0"
+        ]
+    },
+    {
+        "question": "What helps with constipation during pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_ANC_013_0"
+        ],
+        "generated_answer": "Adequate water intake and dietary fiber from vegetables, nuts, fruit, and whole grains help with constipation during pregnancy. If constipation persists despite dietary changes, wheat bran or other fibre supplements are recommended. For troublesome constipation not relieved by diet or fibre, intermittent use of poorly-absorbed laxatives may be considered.",
+        "retrieved_chunk_ids": [
+            "DOC_ANC_013_0",
+            "DOC_NUT_106_0",
+            "DOC_NUT_117_0"
+        ]
+    },
+    {
+        "question": "How can listeriosis be prevented during pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_INF_088_0"
+        ],
+        "generated_answer": "Listeriosis can be prevented during pregnancy by avoiding high-risk contaminated foods such as unpasteurized dairy products, soft cheeses, raw vegetables, or prepared deli meats. Practicing safe food handling is also essential for prevention.",
+        "retrieved_chunk_ids": [
+            "DOC_NI_210_0",
+            "DOC_INF_088_0",
+            "DOC_INF_080_0"
+        ]
+    },
+    {
+        "question": "Why is rubella infection dangerous during early pregnancy?",
+        "expected_chunk_ids": [
+            "DOC_INF_090_0"
+        ],
+        "generated_answer": "Rubella infection is dangerous during early pregnancy because it carries a critical risk of congenital rubella syndrome in the developing fetus. This severe viral condition can cause permanent birth defects, including congenital heart anomalies, sensorineural hearing loss, cataracts, microcephaly, and long-term intellectual and developmental delays.",
+        "retrieved_chunk_ids": [
+            "DOC_INF_090_0",
+            "DOC_NI_215_0",
+            "DOC_INF_080_0"
+        ]
+    },
+    {
+        "question": "How should preterm or low birth weight babies be kept warm?",
+        "expected_chunk_ids": [
+            "DOC_NEIC_201_0"
+        ],
+        "generated_answer": "Preterm or low birth weight babies should be kept warm by wearing one or two more layers of clothes than an adult, along with a soft hat to cover the head. Additionally, skin to skin contact, known as kangaroo mother care, should be practiced as much as possible every single day to keep the small baby warm, reduce stress, stabilize heart rate, and promote frequent breastfeeding.",
+        "retrieved_chunk_ids": [
+            "DOC_NEIC_201_0",
+            "DOC_NEIC_198_0",
+            "DOC_NEIC_200_0"
+        ]
+    },
+    {
+        "question": "What vaccines does a baby receive at birth in Kenya?",
+        "expected_chunk_ids": [
+            "DOC_NEIC_203_0"
+        ],
+        "generated_answer": "At birth or first contact, infants in Kenya receive the single dose intradermal BCG vaccine to prevent tuberculosis, along with the birth dose oral polio vaccine OPV zero.",
+        "retrieved_chunk_ids": [
+            "DOC_NEIC_203_0",
+            "DOC_NEIC_204_0",
+            "DOC_NI_205_0"
+        ]
+    },
+    {
+        "question": "What emergency hotline can be called for urgent medical help in Kenya?",
+        "expected_chunk_ids": [
+            "DOC_HRP_194_0"
+        ],
+        "generated_answer": "For urgent medical help in Kenya, you can call the Emergency Medicine Kenya Foundation toll free at 0800 723 253 or at 0710 633 855.",
+        "retrieved_chunk_ids": [
+            "DOC_HRP_194_0",
+            "DOC_HRP_196_0",
+            "DOC_HRP_195_0"
+        ]
+    }
+]

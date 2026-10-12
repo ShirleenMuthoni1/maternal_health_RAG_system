@@ -1,0 +1,90 @@
+[
+    {
+        "question": "What should I know about staying healthy during my third trimester?",
+        "danger_detected": false,
+        "answer": "During your third trimester, it's important to consume an additional three hundred to four hundred fifty calories daily, representing a ten to fifteen percent increase over your pre-pregnancy baseline needs. This increase in energy intake is necessary to fuel healthy fetal tissue development and maternal weight gain. Additionally, maintaining a balanced diet that includes fruits, vegetables, whole grains, dairy products, and protein-rich foods is crucial to ensure adequate intake of essential nutrients for both maternal health and fetal development.",
+        "retrieved_chunk_ids": [
+            "DOC_NUT_100_0",
+            "DOC_NUT_102_0",
+            "DOC_ANC_003_0"
+        ]
+    },
+    {
+        "question": "How can I have a smooth and healthy pregnancy overall?",
+        "danger_detected": false,
+        "answer": "To have a smooth and healthy pregnancy overall, it is important to consume a balanced diet that includes fruits, vegetables, whole grains, dairy products, and protein-rich foods. Eating from multiple food groups such as fresh vegetables, fruits, whole grains, beans, and lean meats helps prevent maternal malnutrition and supports healthy growth and development for the baby. Managing a high-risk pregnancy involves frequent checkups, tailored treatment plans, and self-care. Expectant mothers should eat nutritious foods rich in folic acid, calcium, and iron, maintain recommended weight gain, avoid alcohol, smoking, and recreational drugs, and limit strenuous activities when advised. Immediate medical care is necessary if warning signs appear, such as vaginal bleeding, lower belly pain or severe cramps, watery discharge,",
+        "retrieved_chunk_ids": [
+            "DOC_NUT_102_0",
+            "DOC_NUT_115_0",
+            "DOC_HRP_181_0"
+        ]
+    },
+    {
+        "question": "I'm really scared about labor, what should I expect?",
+        "danger_detected": false,
+        "answer": "I understand your concerns about labor. Common early physical indicators show that the cervix and body are preparing for birth, even though active labor and real contractions might still be days or weeks away. Digestive shifts like loose stools, mild diarrhea, nausea, or a sudden decrease in appetite often occur right before labor starts. These natural changes are caused by birth hormones relaxing muscles and clearing the digestive tract to make space for delivery. However, certain symptoms during labor require immediate medical attention, such as chest pain, severe lightheadedness, fainting, continuous nausea, or sudden extreme swelling in the face, hands, arms, or legs. It's important to seek urgent help at a hospital or health facility if you experience any of these symptoms.",
+        "retrieved_chunk_ids": [
+            "DOC_LAB_144_0",
+            "DOC_LAB_149_0",
+            "DOC_LAB_159_0"
+        ]
+    },
+    {
+        "question": "This is my first pregnancy and I'm nervous about everything, where do I start?",
+        "danger_detected": false,
+        "answer": "To start, it's important to establish a birth preparedness plan with a midwife or healthcare provider during your regular antenatal clinic visits. Review and update this plan as your expected due date approaches to ensure all arrangements for travel, funds, and emergency contacts are clear and ready. Additionally, managing a high-risk pregnancy involves frequent checkups, tailored treatment plans, and self-care. Eat nutritious foods rich in folic acid, calcium, and iron, maintain recommended weight gain, avoid alcohol, smoking, and recreational drugs, and limit strenuous activities when advised. If you experience any warning signs, such as vaginal bleeding, lower belly pain or severe cramps, watery discharge, reduced baby movement, severe headaches, or sudden vision changes, seek immediate medical care.",
+        "retrieved_chunk_ids": [
+            "DOC_HRP_181_0",
+            "DOC_BP_133_0",
+            "DOC_PRE_038_0"
+        ]
+    },
+    {
+        "question": "I'm 28 weeks pregnant and have been having mild swelling and trouble sleeping, is this normal?",
+        "danger_detected": true,
+        "answer": "This sounds like it could be a serious warning sign during pregnancy. Please go to your nearest hospital or health facility immediately, or call your emergency healthcare provider. Do not wait to see if it gets better on its own.",
+        "retrieved_chunk_ids": []
+    },
+    {
+        "question": "I've been feeling really tired and a bit nauseous again, and I'm not sure if I'm eating enough, what should I do?",
+        "danger_detected": false,
+        "answer": "If you're feeling tired and nauseous, it's important to ensure you're eating small, frequent meals throughout the day to help ease these symptoms. Staying hydrated with water and choosing light, easily digestible foods can also help improve your comfort. If your symptoms persist or worsen, it's recommended to seek medical attention promptly for an evaluation and appropriate care.",
+        "retrieved_chunk_ids": [
+            "DOC_NUT_117_0",
+            "DOC_ANC_009_0",
+            "DOC_DS_026_0"
+        ]
+    },
+    {
+        "question": "I'm in my first trimester and keep feeling nauseous, what can help?",
+        "danger_detected": true,
+        "answer": "This sounds like it could be a serious warning sign during pregnancy. Please go to your nearest hospital or health facility immediately, or call your emergency healthcare provider. Do not wait to see if it gets better on its own.",
+        "retrieved_chunk_ids": []
+    },
+    {
+        "question": "I'm 36 weeks along now, what should I be preparing for at this stage?",
+        "danger_detected": false,
+        "answer": "At 36 weeks along, you should be preparing for the possibility of labor and delivery. It's important to have a birth plan in place, discuss it with your healthcare provider, and consider the options for pain management and delivery methods. Additionally, you should continue to follow the recommended nutritional interventions, such as eating nutritious foods rich in folic acid, calcium, and iron, maintaining recommended weight gain, and avoiding alcohol, smoking, and recreational drugs. Monitoring your blood pressure or blood sugar at home, if applicable, and being aware of any warning signs that require immediate medical care is also crucial.",
+        "retrieved_chunk_ids": [
+            "DOC_HRP_181_0",
+            "DOC_ANC_001_0",
+            "DOC_HRP_185_0"
+        ]
+    },
+    {
+        "question": "I just gave birth a few days ago and I'm exhausted and overwhelmed, is that normal?",
+        "danger_detected": false,
+        "answer": "Yes, it is normal to feel exhausted and overwhelmed after giving birth. Fatigue and sudden exhaustion are common in the final days before labour, and many new mothers experience mild emotional shifts known as postnatal blues or baby blues. These symptoms typically peak within the first few days and resolve naturally within two weeks with rest and family support.",
+        "retrieved_chunk_ids": [
+            "DOC_LAB_148_0",
+            "DOC_POST_142_0",
+            "DOC_HRP_189_0"
+        ]
+    },
+    {
+        "question": "I have a history of high blood pressure and I'm newly pregnant, what should I be careful about?",
+        "danger_detected": true,
+        "answer": "This sounds like it could be a serious warning sign during pregnancy. Please go to your nearest hospital or health facility immediately, or call your emergency healthcare provider. Do not wait to see if it gets better on its own.",
+        "retrieved_chunk_ids": []
+    }
+]

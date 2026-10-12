@@ -1,0 +1,8 @@
+{
+    "k": 3,
+    "num_questions": 30,
+    "average_precision_at_k": 0.3444444444444445,
+    "average_recall_at_k": 0.9722222222222221,
+    "average_mrr": 0.95,
+    "average_ndcg_at_k": 0.9403284847504655
+}
