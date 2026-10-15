@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | Bloom Maternal Care</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <button class="back-btn" id="backBtn" type="button" aria-label="Go back">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <img class="header-logo" src="assets/images/logo.png" alt="Bloom logo">
+    <div class="header-text">
+      <span class="brand">Bloom Maternal Care</span>
+      <span class="page-title">Create Account</span>
+    </div>
+  </header>
+
+  <main class="auth-main">
+    <div class="logo-circle">
+      <img src="assets/images/logo.png" alt="Bloom logo">
+    </div>
+
+    <span class="badge">
+      <span class="material-symbols-outlined">spa</span>
+      Care for Every Trimester
+    </span>
+
+    <h1>Create Your Account</h1>
+    <p class="subtitle">
+      A gentle, caring space to nurture and support you throughout your pregnancy and motherhood journey.
+    </p>
+
+    <form class="auth-card" id="registerForm" novalidate>
+      <p class="step-label">Step 1: Mama Profile</p>
+
+      <div class="field">
+        <label for="email">Email Address <span class="required">*</span></label>
+        <div class="input-wrap">
+          <input type="email" id="email" class="no-icon" placeholder="Enter your email" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label-row">
+          <label for="password">Password <span class="required">*</span></label>
+          <span class="hint">At least 8 characters</span>
+        </div>
+        <div class="input-wrap">
+          <span class="material-symbols-outlined input-icon">lock</span>
+          <input type="password" id="password" placeholder="Create a password" autocomplete="new-password">
+          <button type="button" class="toggle-password" data-target="password" aria-label="Show or hide password">
+            <span class="material-symbols-outlined">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+        <div class="input-wrap">
+          <span class="material-symbols-outlined input-icon">lock_reset</span>
+          <input type="password" id="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password">
+          <button type="button" class="toggle-password" data-target="confirmPassword" aria-label="Show or hide password">
+            <span class="material-symbols-outlined">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="form-error" id="formError" role="alert"></p>
+
+      <button type="submit" class="btn-primary">
+        Continue Registration
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+    </form>
+
+        <p class="auth-footer-text">Already have an account?</p>
+    <a href="login.html" class="btn-secondary">
+      <span class="material-symbols-outlined">login</span>
+      Log in to Bloom
+    </a>
+  </main>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>
