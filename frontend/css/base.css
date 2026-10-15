@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+
+:root {
+  --primary: #0b5155;
+  --primary-dark: #083d40;
+  --background: #faf8f6;
+  --card: #ffffff;
+  --field-bg: #f3f1ef;
+  --text: #1f2933;
+  --muted: #6b7280;
+  --badge-bg: #fbe3ee;
+  --badge-text: #9b2c6b;
+  --danger: #b91c1c;
+  --danger-bg: #fdf0f0;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f6f4f3;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Pink and teal gradient behind every page. It stays in place while you scroll. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(252, 228, 238, 0.65) 0, rgba(252, 228, 238, 0) 48%),
+    radial-gradient(circle at 100% 100%, rgba(196, 226, 224, 0.75) 0, rgba(196, 226, 224, 0) 52%),
+    linear-gradient(180deg, #fef7fa 0%, #f2f8f7 60%, #f6faf9 100%);
+}
+
+a { color: var(--primary); }
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 22px;
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* Top bar used on every page (slightly see-through so the gradient shows) */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+}
+
+.header-logo { width: 44px; height: 44px; object-fit: contain; }
+
+.header-text { display: flex; flex-direction: column; }
+
+.brand {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Pink badge: "Care for Every Trimester" */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.badge .material-symbols-outlined { font-size: 14px; }
+
+/* Main teal button */
+.btn-primary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover { background: var(--primary-dark); }

@@ -1,0 +1,357 @@
+/* Styles for the dashboard page go here */
+.dash-main {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 28px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dash-main h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 14px 0 8px;
+}
+
+.dash-main .subtitle {
+  margin: 0 0 14px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e3eeee;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 22px;
+}
+
+.status-pill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+/* Pregnancy overview card */
+.overview-card {
+  width: 100%;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: left;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+}
+
+.overview-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.overview-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.overview-title h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #e3eeee;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.edit-link .material-symbols-outlined { font-size: 16px; }
+
+.stage-box {
+  background: #f3f1ef;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.stage-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.stage-top strong {
+  font-size: 18px;
+  letter-spacing: 0;
+  color: var(--primary);
+}
+
+.progress {
+  height: 8px;
+  background: #dddbd8;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.trimester-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.trimester-labels .active {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.location-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f3f1ef;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--primary);
+}
+
+.location-box small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.location-box strong {
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* Big "Ask a question" button */
+.ask-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--primary);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 18px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.ask-btn:hover { background: var(--primary-dark); }
+
+.ask-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ask-btn .ask-text { flex: 1; }
+
+/* Emergency notice */
+.emergency {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--danger-bg);
+  border: 1px solid #f3c9c9;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: left;
+}
+
+.emergency-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #fbdada;
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emergency strong {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--danger);
+  margin-bottom: 2px;
+}
+
+.emergency p {
+  font-size: 13px;
+  color: var(--danger);
+  line-height: 1.4;
+}
+
+/* Recent questions sidebar */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 10;
+}
+
+.sidebar-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 320px;
+  max-width: 88%;
+  background: #f2f4f4;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  z-index: 20;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
+}
+
+.sidebar.open { transform: translateX(0); }
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.sidebar-top h2 {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.sidebar-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #cdeeee;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+}
+
+.sidebar-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.question-list {
+  list-style: none;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.question-list li { margin-bottom: 10px; }
+
+.question-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.question-link:hover { border-color: var(--primary); }
+
+.empty-note {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
