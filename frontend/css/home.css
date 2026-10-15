@@ -1,0 +1,233 @@
+/* ---------- Hero ---------- */
+.hero {
+  padding: 48px 20px 64px;
+}
+
+.hero-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.home-logo {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 0 0 8px rgba(11, 81, 85, 0.08), 0 8px 24px rgba(11, 81, 85, 0.14);
+}
+
+.home-logo img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.hero h1 {
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 18px 0 14px;
+}
+
+.hero h1 .highlight { color: var(--primary); }
+
+.lead {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 500px;
+  margin-bottom: 28px;
+}
+
+/* ---------- Buttons: same colour and size ---------- */
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 170px;
+  padding: 12px 24px;
+  background: var(--primary);
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(11, 81, 85, 0.22);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn-home:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-home .material-symbols-outlined { font-size: 20px; }
+
+/* ---------- Sections ---------- */
+.home-section {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 40px 20px 8px;
+  text-align: center;
+}
+
+.kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--badge-text);
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.feature-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
+  border-top: 4px solid var(--primary);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card.pink { border-top-color: #e58bb4; }
+.feature-card.alert { border-top-color: var(--danger); }
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #e3eeee;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.feature-card.pink .feature-icon {
+  background: var(--badge-bg);
+  color: var(--badge-text);
+}
+
+.feature-card.alert .feature-icon {
+  background: #fbdada;
+  color: var(--danger);
+}
+
+.feature-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.feature-card p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ---------- How it works ---------- */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.step {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px 18px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05);
+}
+
+.step-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.step h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.step p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------- Disclaimer ---------- */
+.disclaimer {
+  max-width: 620px;
+  margin: 36px auto 48px;
+  padding: 14px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.disclaimer .material-symbols-outlined {
+  color: var(--primary);
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 760px) {
+  .features,
+  .steps { grid-template-columns: 1fr; }
+
+  .hero { padding: 36px 16px 52px; }
+  .hero h1 { font-size: 28px; }
+  .btn-home { min-width: 150px; }
+}
