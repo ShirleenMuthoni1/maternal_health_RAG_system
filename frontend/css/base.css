@@ -123,3 +123,24 @@ a { color: var(--primary); }
 }
 
 .btn-primary:hover { background: var(--primary-dark); }
+
+/* Log out button in the top bar */
+.logout-btn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid #cfd8d8;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.logout-btn:hover { background: #e3eeee; }
+
+.logout-btn .material-symbols-outlined { font-size: 18px; }
