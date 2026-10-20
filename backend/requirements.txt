@@ -2,3 +2,4 @@ Flask
 Flask-SQLAlchemy
 bcrypt
 python-dotenv
+psycopg[binary]
