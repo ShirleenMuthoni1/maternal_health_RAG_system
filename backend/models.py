@@ -19,3 +19,21 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User {self.email}>"
+
+
+class ExpectantMother(db.Model):
+    """Context information for one mother. Matches tbl_expectantmother in the ERD."""
+    __tablename__ = "expectant_mothers"
+
+    email = db.Column(
+        db.String(255),
+        db.ForeignKey("users.email", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    location = db.Column(db.String(255), nullable=False)
+    medical_history = db.Column(db.Text, nullable=True)
+    gestational_period = db.Column(db.Text, nullable=False)
+    symptoms = db.Column(db.Text, nullable=True)
+
+    def __repr__(self):
+        return f"<ExpectantMother {self.email}>"
