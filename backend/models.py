@@ -15,6 +15,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    is_verified = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=utc_now, nullable=False)
 
     def __repr__(self):
@@ -37,3 +38,21 @@ class ExpectantMother(db.Model):
 
     def __repr__(self):
         return f"<ExpectantMother {self.email}>"
+
+
+class VerificationCode(db.Model):
+    """A one-time email verification code. Only a hash of the code is stored."""
+    __tablename__ = "verification_codes"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    purpose = db.Column(db.String(20), nullable=False)  # "register" or "reset"
+    code_hash = db.Column(db.String(64), nullable=False)
+    attempts = db.Column(db.Integer, nullable=False, default=0)
+    expires_at = db.Column(db.DateTime(timezone=True), nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=utc_now, nullable=False)

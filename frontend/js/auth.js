@@ -17,7 +17,7 @@ document.querySelectorAll('.toggle-password').forEach(function (button) {
   });
 });
 
-// Checks that an email looks correct like email address: name@something.com
+// Checks that an email looks like name@something.com
 function emailLooksValid(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -36,12 +36,21 @@ async function sendToServer(url, body) {
   } catch (e) {
     data = {};
   }
-  return { ok: response.ok, data: data };
+  return { ok: response.ok, status: response.status, data: data };
+}
+
+// Remember which email is waiting to be verified (for this tab only)
+function rememberPendingEmail(email) {
+  try {
+    sessionStorage.setItem('bloomPendingEmail', email);
+  } catch (e) {
+    // Ignore storage problems
+  }
 }
 
 const NETWORK_ERROR = 'Could not reach the server. Please check your connection and try again.';
 
-// Log in form 
+//  Log in form 
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
   const submitBtn = loginForm.querySelector('button[type="submit"]');
@@ -67,10 +76,24 @@ if (loginForm) {
 
     try {
       const result = await sendToServer('/api/login', { email: email, password: password });
+
       if (result.ok) {
         window.location.href = 'dashboard.html';
         return;
       }
+
+      // The password was right but the email was never verified
+      if (result.status === 403 && result.data.needsVerification) {
+        rememberPendingEmail(email);
+        try {
+          await sendToServer('/api/resend-code', { email: email });
+        } catch (e) {
+          // She can use the resend button on the next page
+        }
+        window.location.href = 'verify-email.html';
+        return;
+      }
+
       error.textContent = result.data.error || 'Something went wrong. Please try again.';
     } catch (e) {
       error.textContent = NETWORK_ERROR;
@@ -115,6 +138,7 @@ if (registerForm) {
 
     try {
       const result = await sendToServer('/api/register', { email: email, password: password });
+
       if (result.ok) {
         // A new account starts with an empty profile
         try {
@@ -122,9 +146,11 @@ if (registerForm) {
         } catch (e) {
           // Ignore storage problems
         }
-        window.location.href = 'profile-setup.html';
+        rememberPendingEmail(email);
+        window.location.href = 'verify-email.html';
         return;
       }
+
       error.textContent = result.data.error || 'Something went wrong. Please try again.';
     } catch (e) {
       error.textContent = NETWORK_ERROR;
