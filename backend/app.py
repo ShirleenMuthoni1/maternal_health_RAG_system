@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory, session
 
 from models import db, User, ExpectantMother
+from verification import issue_code, check_code
 
 load_dotenv()
 
@@ -43,7 +44,7 @@ MAX_LOCATION_LENGTH = 255
 MAX_TEXT_LENGTH = 2000
 
 
-# Password hashing
+# Password hashing 
 def hash_password(password):
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
@@ -57,7 +58,10 @@ def current_user():
     user_id = session.get("user_id")
     if user_id is None:
         return None
-    return db.session.get(User, user_id)
+    user = db.session.get(User, user_id)
+    if user is None or not user.is_verified:
+        return None
+    return user
 
 
 def login_required(view):
@@ -70,7 +74,7 @@ def login_required(view):
     return wrapped
 
 
-# Pages and health check  
+# Pages and health check 
 @app.route("/")
 def home():
     return send_from_directory(FRONTEND_DIR, "index.html")
@@ -81,7 +85,7 @@ def health():
     return jsonify(status="ok")
 
 
-# Registration, log in, log out
+# Registration, email verification, log in, log out
 @app.route("/api/register", methods=["POST"])
 def register():
     data = request.get_json(silent=True) or {}
@@ -94,16 +98,64 @@ def register():
         return jsonify(error="Your password must be at least 8 characters."), 400
     if len(password.encode("utf-8")) > MAX_PASSWORD_BYTES:
         return jsonify(error="Your password is too long. Please use 72 characters or fewer."), 400
-    if User.query.filter_by(email=email).first():
+
+    user = User.query.filter_by(email=email).first()
+
+    if user is not None and user.is_verified:
         return jsonify(error="An account with this email already exists."), 409
 
-    user = User(email=email, password_hash=hash_password(password))
-    db.session.add(user)
+    if user is not None:
+        # She registered before but never entered her code, so let her start again
+        user.password_hash = hash_password(password)
+    else:
+        user = User(email=email, password_hash=hash_password(password), is_verified=False)
+        db.session.add(user)
+    db.session.commit()
+
+    # The account stays unverified, and she is not logged in, until she enters the code
+    issue_code(user, "register")
+
+    session.clear()
+    return jsonify(
+        message="We sent a 6-digit code to your email.",
+        email=user.email,
+        needsVerification=True,
+    ), 201
+
+
+@app.route("/api/verify-email", methods=["POST"])
+def verify_email():
+    data = request.get_json(silent=True) or {}
+    email = str(data.get("email", "")).strip().lower()
+    code = str(data.get("code", "")).strip()
+
+    user = User.query.filter_by(email=email).first() if email else None
+    if user is None:
+        return jsonify(error="That code is incorrect or has expired."), 400
+
+    ok, message = check_code(user, "register", code)
+    if not ok:
+        return jsonify(error=message), 400
+
+    user.is_verified = True
     db.session.commit()
 
     session.clear()
     session["user_id"] = user.id
-    return jsonify(message="Account created.", email=user.email), 201
+    return jsonify(message="Email verified.", email=user.email)
+
+
+@app.route("/api/resend-code", methods=["POST"])
+def resend_code():
+    data = request.get_json(silent=True) or {}
+    email = str(data.get("email", "")).strip().lower()
+
+    user = User.query.filter_by(email=email).first() if email else None
+    if user is not None and not user.is_verified:
+        issue_code(user, "register")  # does nothing if a code was sent a moment ago
+
+    # The same reply for every email, so nobody can find out who is registered
+    return jsonify(message="If that email is waiting for verification, we have sent a new code.")
 
 
 @app.route("/api/login", methods=["POST"])
@@ -120,6 +172,12 @@ def login():
     user = User.query.filter_by(email=email).first()
     if user is None or not password_matches(password, user.password_hash):
         return wrong
+
+    if not user.is_verified:
+        return jsonify(
+            error="Please verify your email before logging in.",
+            needsVerification=True,
+        ), 403
 
     session.clear()
     session["user_id"] = user.id
@@ -139,7 +197,7 @@ def me():
     return jsonify(email=user.email)
 
 
-# Context information (the mother's profile)
+# Context information (the mother's profile) 
 def profile_to_dict(profile):
     return {
         "email": profile.email,

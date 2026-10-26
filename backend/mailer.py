@@ -1,7 +1,7 @@
 import os
 import smtplib
 from email.message import EmailMessage
-from email.utils import formataddr
+from email.utils import formataddr 
 
 
 def send_email(to_address, subject, body):

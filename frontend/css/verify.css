@@ -1,0 +1,63 @@
+.email-shown {
+  font-weight: 700;
+  color: var(--text);
+  word-break: break-all;
+}
+
+.code-input {
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.5em;
+  font-size: 28px;
+  font-weight: 700;
+  padding: 14px;
+  background: var(--field-bg);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.code-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+}
+
+.form-success {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 18px;
+  margin-bottom: 10px;
+}
+
+.resend-row {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-btn:disabled {
+  color: var(--muted);
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
+.spam-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
