@@ -8,6 +8,7 @@ from flask import Flask, jsonify, request, send_from_directory, session
 
 from models import db, User, ExpectantMother
 from verification import issue_code, check_code
+from password_reset import reset_bp
 
 load_dotenv()
 
@@ -33,6 +34,7 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 # When the app is hosted over https, also set: app.config["SESSION_COOKIE_SECURE"] = True
 
 db.init_app(app)
+app.register_blueprint(reset_bp)
 
 with app.app_context():
     db.create_all()
