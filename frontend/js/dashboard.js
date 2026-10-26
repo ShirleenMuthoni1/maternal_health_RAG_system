@@ -1,12 +1,4 @@
-// Dashboard logic goes here
-// ---------- Load the saved profile (temporary: kept in the browser) ----------
-let profile = null;
-try {
-  profile = JSON.parse(localStorage.getItem('bloomProfile'));
-} catch (e) {
-  profile = null;
-}
-
+// Load the mother's profile from the backend 
 // Works out which trimester a number of weeks falls in
 function getTrimester(weeks) {
   if (weeks <= 13) return 1;
@@ -18,7 +10,7 @@ function ordinal(n) {
   return n === 1 ? '1st' : n === 2 ? '2nd' : '3rd';
 }
 
-if (profile && profile.gestationalAge) {
+function showProfile(profile) {
   const weeks = Number(profile.gestationalAge);
   const trimester = getTrimester(weeks);
 
@@ -31,28 +23,36 @@ if (profile && profile.gestationalAge) {
   document.getElementById('progressFill').style.width = percent + '%';
 
   document.getElementById('t' + trimester).classList.add('active');
+
+  if (profile.location) {
+    // "Nairobi, Kenya" is shown as "Nairobi"
+    document.getElementById('locationText').textContent = profile.location.split(',')[0];
+  }
 }
 
-if (profile && profile.location) {
-  // "Nairobi, Kenya" is shown as "Nairobi"
-  document.getElementById('locationText').textContent = profile.location.split(',')[0];
+async function loadProfile() {
+  try {
+    const response = await fetch('/api/profile');
+
+    if (response.status === 404) {
+      // She has an account but no profile yet, so send her to set one up
+      window.location.href = 'profile-setup.html';
+      return;
+    }
+    if (response.ok) {
+      showProfile(await response.json());
+    }
+  } catch (e) {
+    // If the server cannot be reached, the page keeps its default text
+  }
 }
 
-// The designs show a name, but registration only collects an email, so a name
-// is shown only if one has been saved. This will come from the backend later.
-let userName = null;
-try {
-  userName = localStorage.getItem('bloomUserName');
-} catch (e) {
-  userName = null;
-}
-if (userName) {
-  document.getElementById('welcome').textContent = 'Welcome back, ' + userName;
-}
+loadProfile();
 
-// ---------- Recent questions sidebar ----------
-// TEMPORARY sample questions so you can see the design. Once the chat page and
-// backend save real questions, set USE_SAMPLES to false and delete the samples.
+// Recent questions sidebar 
+// TEMPORARY: questions are still kept in the browser and will move to the database
+// when the chat page is connected to the backend. The sample questions only let
+// you see the design.
 const USE_SAMPLES = true;
 const SAMPLE_QUESTIONS = [
   'Should I continue taking folic acid supplements during this trimester?',
@@ -97,7 +97,7 @@ if (questions.length === 0) {
   });
 }
 
-// ---------- Open and close the sidebar ----------
+// Open and close the sidebar 
 const sidebar = document.getElementById('sidebar');
 const backdrop = document.getElementById('sidebarBackdrop');
 
