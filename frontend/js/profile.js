@@ -1,25 +1,23 @@
-// Profile setup logic goes here
-// Back arrow in the top bar:
-// - if she already saved a profile (she clicked Edit on the dashboard), go back to the dashboard
-// - otherwise she is still signing up, so go back to the registration page
-const backBtn = document.getElementById('backBtn');
-if (backBtn) {
-  backBtn.addEventListener('click', function () {
-    let hasProfile = false;
-    try {
-      hasProfile = !!localStorage.getItem('bloomProfile');
-    } catch (e) {
-      hasProfile = false;
-    }
-    window.location.href = hasProfile ? 'dashboard.html' : 'register.html';
-  });
-}
-
 const weeksSelect = document.getElementById('gestationalAge');
 const locationSelect = document.getElementById('location');
 const symptomsBox = document.getElementById('symptoms');
 const historyBox = document.getElementById('medicalHistory');
 const error = document.getElementById('formError');
+const profileForm = document.getElementById('profileForm');
+const submitBtn = profileForm.querySelector('button[type="submit"]');
+
+// true when this mother already has a saved profile (so saving means updating it)
+let hasProfile = false;
+
+// Back arrow in the top bar:
+// - if she already has a profile (she clicked Edit on the dashboard), go back to the dashboard
+// - otherwise she is still signing up, so go back to the welcome page
+const backBtn = document.getElementById('backBtn');
+if (backBtn) {
+  backBtn.addEventListener('click', function () {
+    window.location.href = hasProfile ? 'dashboard.html' : 'index.html';
+  });
+}
 
 // Fill the weeks dropdown with 1 to 42 weeks
 for (let week = 1; week <= 42; week++) {
@@ -29,21 +27,44 @@ for (let week = 1; week <= 42; week++) {
   weeksSelect.appendChild(option);
 }
 
-// If a profile was saved before (for example when she clicks Edit), fill it back in
-try {
-  const saved = JSON.parse(localStorage.getItem('bloomProfile'));
-  if (saved) {
-    weeksSelect.value = saved.gestationalAge || '';
-    locationSelect.value = saved.location || '';
-    symptomsBox.value = saved.symptoms || '';
-    historyBox.value = saved.medicalHistory || '';
+// Load the saved profile (if there is one) and fill the form
+async function loadProfile() {
+  try {
+    const response = await fetch('/api/profile');
+    if (response.ok) {
+      const saved = await response.json();
+      hasProfile = true;
+      weeksSelect.value = saved.gestationalAge || '';
+      locationSelect.value = saved.location || '';
+      symptomsBox.value = saved.symptoms || '';
+      historyBox.value = saved.medicalHistory || '';
+    }
+    // A 404 just means a new mother with no profile yet, so the form stays empty
+  } catch (e) {
+    error.textContent = 'Could not load your saved details. Please check your connection.';
   }
-} catch (e) {
-  // If the browser blocks storage, the form just starts empty
 }
 
-// Profile form
-document.getElementById('profileForm').addEventListener('submit', function (event) {
+loadProfile();
+
+// Sends the profile to the backend with the chosen method (POST creates, PUT updates)
+async function saveProfile(method, profile) {
+  const response = await fetch('/api/profile', {
+    method: method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(profile)
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (e) {
+    data = {};
+  }
+  return { ok: response.ok, status: response.status, data: data };
+}
+
+profileForm.addEventListener('submit', async function (event) {
   event.preventDefault();
 
   if (!weeksSelect.value || !locationSelect.value) {
@@ -52,6 +73,7 @@ document.getElementById('profileForm').addEventListener('submit', function (even
   }
 
   error.textContent = '';
+  submitBtn.disabled = true;
 
   const profile = {
     gestationalAge: weeksSelect.value,
@@ -60,13 +82,22 @@ document.getElementById('profileForm').addEventListener('submit', function (even
     medicalHistory: historyBox.value.trim()
   };
 
-  // TEMPORARY: there is no backend yet, so this is kept in the browser only.
-  // Later this will be sent to the context information API and saved in the database.
   try {
-    localStorage.setItem('bloomProfile', JSON.stringify(profile));
+    let result = await saveProfile(hasProfile ? 'PUT' : 'POST', profile);
+
+    // If the server says a profile already exists, update it instead
+    if (result.status === 409) {
+      result = await saveProfile('PUT', profile);
+    }
+
+    if (result.ok) {
+      window.location.href = 'dashboard.html';
+      return;
+    }
+    error.textContent = result.data.error || 'Something went wrong. Please try again.';
   } catch (e) {
-    // Ignore storage problems for now
+    error.textContent = 'Could not reach the server. Please check your connection and try again.';
   }
 
-  window.location.href = 'dashboard.html';
+  submitBtn.disabled = false;
 });

@@ -1,4 +1,3 @@
-// Chat logic goes here
 // Back arrow in the top bar goes to the dashboard
 document.getElementById('backBtn').addEventListener('click', function () {
   window.location.href = 'dashboard.html';
@@ -9,34 +8,39 @@ const chatForm = document.getElementById('chatForm');
 const questionInput = document.getElementById('questionInput');
 const sendBtn = document.getElementById('sendBtn');
 
-// ---------- Context information card (from the saved profile) ----------
-let profile = null;
-try {
-  profile = JSON.parse(localStorage.getItem('bloomProfile'));
-} catch (e) {
-  profile = null;
-}
-
+// Context information card (loaded from the backend)
 function ordinal(n) {
   return n === 1 ? '1st' : n === 2 ? '2nd' : '3rd';
 }
 
-if (profile && profile.gestationalAge) {
-  const weeks = Number(profile.gestationalAge);
-  const trimester = weeks <= 13 ? 1 : weeks <= 27 ? 2 : 3;
+async function loadContext() {
+  try {
+    const response = await fetch('/api/profile');
 
-  document.getElementById('ctxWeeks').textContent = weeks + (weeks === 1 ? ' week' : ' weeks');
-  document.getElementById('ctxTrimester').textContent = ordinal(trimester) + ' Trimester';
-} else {
+    if (response.ok) {
+      const profile = await response.json();
+      const weeks = Number(profile.gestationalAge);
+      const trimester = weeks <= 13 ? 1 : weeks <= 27 ? 2 : 3;
+
+      document.getElementById('ctxWeeks').textContent = weeks + (weeks === 1 ? ' week' : ' weeks');
+      document.getElementById('ctxTrimester').textContent = ordinal(trimester) + ' Trimester';
+
+      if (profile.location) {
+        // "Nairobi, Kenya" is shown as "Nairobi"
+        document.getElementById('ctxLocation').textContent = profile.location.split(',')[0];
+      }
+      return;
+    }
+  } catch (e) {
+    // If the server cannot be reached, the card keeps its "Not set" text
+  }
+
   document.getElementById('contextEmpty').hidden = false;
 }
 
-if (profile && profile.location) {
-  // "Nairobi, Kenya" is shown as "Nairobi"
-  document.getElementById('ctxLocation').textContent = profile.location.split(',')[0];
-}
+loadContext();
 
-// ---------- Helpers that draw the message bubbles ----------
+// Helpers that draw the message bubbles
 function timeNow() {
   return new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 }
@@ -130,7 +134,8 @@ function addDangerMessage() {
   scrollToBottom();
 }
 
-// ---------- Keep the question for the dashboard's Recent Questions list ----------
+// Keep the question for the dashboard's Recent Questions list
+// Temporary: kept in the browser until questions are saved in the database
 function saveRecentQuestion(question) {
   try {
     let saved = JSON.parse(localStorage.getItem('bloomRecentQuestions')) || [];
@@ -142,11 +147,11 @@ function saveRecentQuestion(question) {
   }
 }
 
-// ---------- TEMPORARY: stands in for the backend until it exists ----------
+// TEMPORARY: stands in for the backend until it exists
 // Later, replace this whole function with a call to the chat API, which will
 // check for danger signs and run the RAG pipeline (retrieval and the LLM).
 // The real danger sign check belongs in the backend and must be tested properly.
-// This keyword list only lets you see both screens.
+// This keyword list only lets you see both screens. 
 const DEMO_DANGER_WORDS = [
   'heavy bleeding', 'severe headache', 'convulsion', 'seizure',
   'blurred vision', 'severe abdominal pain', 'severe lower abdominal pain',
@@ -177,7 +182,7 @@ function askBackend(question) {
   });
 }
 
-// ---------- Sending a question ----------
+// Sending a question
 let waiting = false;
 
 async function ask(question) {
