@@ -41,7 +41,7 @@
 }
 
 .context-title h2 {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -49,7 +49,7 @@
 }
 
 .context-title p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--muted);
   margin-top: 2px;
 }
@@ -58,7 +58,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   text-decoration: none;
   padding: 6px 10px;
@@ -68,7 +68,7 @@
 
 .context-edit:hover { background: #e3eeee; }
 
-.context-edit .material-symbols-outlined { font-size: 16px; }
+.context-edit .material-symbols-outlined { font-size: 1rem; }
 
 /* The three small tiles */
 .context-chips {
@@ -107,7 +107,7 @@
 
 .chip small {
   display: block;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -116,7 +116,7 @@
 }
 
 .chip strong {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text);
 }
@@ -125,7 +125,7 @@
 .progress-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--muted);
   margin-bottom: 8px;
@@ -150,7 +150,7 @@
 
 .context-empty {
   margin-top: 14px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--muted);
 }
 
@@ -167,7 +167,7 @@
   background: #e8e6e4;
   border-radius: 16px;
   padding: 16px 20px;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.5;
 }
 
@@ -177,12 +177,12 @@
   align-items: center;
   gap: 6px;
   margin-top: 8px;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 
 .msg-meta .material-symbols-outlined {
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--primary);
 }
 
@@ -193,7 +193,7 @@
   border: 2px solid var(--primary);
   border-radius: 18px;
   padding: 20px 22px;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.6;
 }
 
@@ -204,14 +204,14 @@
   margin-top: 14px;
   padding-top: 12px;
   border-top: 1px solid #e5e7eb;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--muted);
   line-height: 1.5;
 }
 
 .sources .material-symbols-outlined {
   color: var(--primary);
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .sources strong {
@@ -234,7 +234,7 @@
   align-items: center;
   gap: 10px;
   color: var(--danger);
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 700;
   padding-bottom: 12px;
   margin-bottom: 12px;
@@ -242,7 +242,7 @@
 }
 
 .msg-danger p {
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.6;
 }
 
@@ -252,7 +252,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 18px;
   padding: 14px 20px;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 
@@ -283,7 +283,7 @@
   border-radius: 999px;
   padding: 16px 24px;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 1rem;
   color: var(--text);
 }
 

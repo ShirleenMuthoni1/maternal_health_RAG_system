@@ -44,7 +44,7 @@ a { color: var(--primary); }
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 22px;
+  font-size: 1.375rem;
   line-height: 1;
   display: inline-block;
   white-space: nowrap;
@@ -76,7 +76,7 @@ a { color: var(--primary); }
 .header-text { display: flex; flex-direction: column; }
 
 .brand {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -84,7 +84,7 @@ a { color: var(--primary); }
 }
 
 .page-title {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -96,13 +96,13 @@ a { color: var(--primary); }
   gap: 6px;
   background: var(--badge-bg);
   color: var(--badge-text);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   padding: 4px 12px;
   border-radius: 999px;
 }
 
-.badge .material-symbols-outlined { font-size: 14px; }
+.badge .material-symbols-outlined { font-size: 0.875rem; }
 
 /* Main teal button */
 .btn-primary {
@@ -117,7 +117,7 @@ a { color: var(--primary); }
   border-radius: 10px;
   padding: 14px;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -135,7 +135,7 @@ a { color: var(--primary); }
   border-radius: 8px;
   padding: 8px 12px;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--primary);
   cursor: pointer;
@@ -143,4 +143,4 @@ a { color: var(--primary); }
 
 .logout-btn:hover { background: #e3eeee; }
 
-.logout-btn .material-symbols-outlined { font-size: 18px; }
+.logout-btn .material-symbols-outlined { font-size: 1.125rem; }
