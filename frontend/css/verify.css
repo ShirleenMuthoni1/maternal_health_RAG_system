@@ -8,7 +8,7 @@
   width: 100%;
   text-align: center;
   letter-spacing: 0.5em;
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 700;
   padding: 14px;
   background: var(--field-bg);
@@ -26,7 +26,7 @@
 
 .form-success {
   color: var(--primary);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   min-height: 18px;
   margin-bottom: 10px;
@@ -35,7 +35,7 @@
 .resend-row {
   text-align: center;
   margin-top: 16px;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 
@@ -44,7 +44,7 @@
   border: none;
   color: var(--primary);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   text-decoration: underline;
   cursor: pointer;
@@ -58,6 +58,6 @@
 
 .spam-hint {
   margin-top: 6px;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
 }

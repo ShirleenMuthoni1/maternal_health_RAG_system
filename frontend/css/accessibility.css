@@ -1,0 +1,97 @@
+
+/* ===== Accessibility settings: button, panel, and the three settings ===== */
+ 
+/* Clear keyboard focus ring on every page */
+:focus-visible { outline: 3px solid #0b5155; outline-offset: 2px; }
+ 
+/* The button that opens the panel */
+.a11y-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: none;
+  border: 1px solid #cfd8d8;
+  border-radius: 50%;
+  color: var(--primary);
+  cursor: pointer;
+}
+.a11y-btn:hover { background: #e3eeee; }
+.a11y-btn .material-symbols-outlined { font-size: 1.125rem; }
+
+/* Push the gear to the far right of the top bar */
+.app-header .a11y-btn { margin-left: auto; }
+/* On pages that have a Log out button, Log out already takes the right side */
+.app-header .logout-btn ~ .a11y-btn { margin-left: 0; }
+ 
+/* Used only on pages that have no top bar (for example the home page) */
+.a11y-btn.a11y-floating {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  background: #ffffff;
+}
+ 
+/* The panel */
+.a11y-panel {
+  position: fixed;
+  top: 64px;
+  right: 12px;
+  z-index: 1001;
+  width: min(320px, calc(100vw - 24px));
+  background: #ffffff;
+  color: #1f2933;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+}
+.a11y-panel[hidden] { display: none; }
+.a11y-panel h2 { font-size: 1rem; margin-bottom: 12px; }
+.a11y-row { margin-bottom: 14px; }
+.a11y-row > span { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 6px; }
+.a11y-group { display: flex; gap: 8px; }
+.a11y-group button, .a11y-reset {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #cfd8d8;
+  border-radius: 8px;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2933;
+  cursor: pointer;
+}
+.a11y-group button[aria-pressed="true"] { background: #0b5155; color: #ffffff; border-color: #0b5155; }
+.a11y-size-label { text-align: center; font-size: 0.8125rem; margin-top: 4px; color: #6b7280; }
+.a11y-reset { width: 100%; margin-top: 4px; }
+ 
+/* Setting: wider line spacing */
+html.a11y-wide body { line-height: 1.8; }
+ 
+/* Setting: high contrast */
+html.a11y-contrast {
+  --primary: #004045;
+  --primary-dark: #002a2d;
+  --background: #ffffff;
+  --card: #ffffff;
+  --field-bg: #ffffff;
+  --text: #000000;
+  --muted: #222222;
+  --badge-bg: #ffffff;
+  --badge-text: #6b0f45;
+  --danger: #8b0000;
+  --danger-bg: #ffffff;
+}
+html.a11y-contrast body { background: #ffffff; color: #000000; }
+html.a11y-contrast body::before { display: none; }
+html.a11y-contrast .app-header { background: #ffffff; border-bottom: 2px solid #000000; }
+html.a11y-contrast a { text-decoration: underline; }
+html.a11y-contrast button, html.a11y-contrast input,
+html.a11y-contrast select, html.a11y-contrast textarea { border: 2px solid #000000; }
+html.a11y-contrast .btn-primary { background: #004045; color: #ffffff; }
+html.a11y-contrast :focus-visible { outline: 3px solid #000000; }
+html.a11y-contrast .a11y-panel { border: 2px solid #000000; }
