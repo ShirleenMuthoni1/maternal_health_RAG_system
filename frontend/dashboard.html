@@ -3,61 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | Bloom Maternal Care</title>
+  <title data-i18n="dash.docTitle">Dashboard | Bloom Maternal Care</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/accessibility.css">
   <link rel="stylesheet" href="css/dashboard.css">
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/guard.js"></script>
-  <script src="js/accessibility.js"></script> 
+  <script src="js/accessibility.js"></script>
 </head>
 <body>
 
   <header class="app-header">
-    <button class="back-btn" id="menuBtn" type="button" aria-label="Open recent questions">
+    <button class="back-btn" id="menuBtn" type="button" aria-label="Open recent questions" data-i18n-aria="dash.openRecent">
       <span class="material-symbols-outlined">forum</span>
     </button>
     <img class="header-logo" src="assets/images/logo.png" alt="Bloom logo">
     <div class="header-text">
       <span class="brand">Bloom Maternal Care</span>
-      <span class="page-title">Dashboard</span>
+      <span class="page-title" data-i18n="dash.page">Dashboard</span>
     </div>
 
-      <button type="button" class="logout-btn" id="logoutBtn">
+    <button type="button" class="logout-btn" id="logoutBtn">
       <span class="material-symbols-outlined">logout</span>
-      Log out
+      <span data-i18n="common.logout">Log out</span>
     </button>
   </header>
 
   <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-  <aside class="sidebar" id="sidebar" aria-label="Recent questions">
+  <aside class="sidebar" id="sidebar" aria-label="Recent questions" data-i18n-aria="dash.recent">
     <div class="sidebar-top">
       <span class="sidebar-icon">
         <span class="material-symbols-outlined">forum</span>
       </span>
-      <h2>Recent Questions</h2>
-      <button class="icon-btn" id="closeSidebar" type="button" aria-label="Close sidebar">
+      <h2 data-i18n="dash.recent">Recent Questions</h2>
+      <button class="icon-btn" id="closeSidebar" type="button" aria-label="Close sidebar" data-i18n-aria="dash.closeSidebar">
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
 
-    <p class="sidebar-label">Recent Questions</p>
+    <p class="sidebar-label" data-i18n="dash.recent">Recent Questions</p>
     <ul class="question-list" id="questionList"></ul>
 
     <button class="collapse-btn" id="collapseBtn" type="button">
       <span class="material-symbols-outlined">keyboard_double_arrow_left</span>
-      Collapse Sidebar
+      <span data-i18n="dash.collapse">Collapse Sidebar</span>
     </button>
   </aside>
 
   <main class="dash-main">
     <span class="badge">
       <span class="material-symbols-outlined">spa</span>
-      Care for Every Trimester
+      <span data-i18n="dash.badge">Care for Every Trimester</span>
     </span>
 
+    <!-- These four lines are filled in by dashboard.js, so they have no data-i18n yet -->
     <h1 id="welcome">Welcome back</h1>
-    <p class="subtitle">Here is an overview of your maternal journey today.</p>
+    <p class="subtitle" data-i18n="dash.subtitle">Here is an overview of your maternal journey today.</p>
 
     <span class="status-pill">
       <span class="dot"></span>
@@ -70,33 +73,33 @@
           <span class="icon-box">
             <span class="material-symbols-outlined">monitor_heart</span>
           </span>
-          <h2>Pregnancy Overview</h2>
+          <h2 data-i18n="dash.overview">Pregnancy Overview</h2>
         </div>
         <a href="profile-setup.html" class="edit-link">
           <span class="material-symbols-outlined">edit</span>
-          Edit
+          <span data-i18n="dash.edit">Edit</span>
         </a>
       </div>
 
       <div class="stage-box">
         <div class="stage-top">
-          <span>GESTATIONAL STAGE</span>
+          <span data-i18n="dash.stage">GESTATIONAL STAGE</span>
           <strong id="weeksText">-- Weeks</strong>
         </div>
         <div class="progress">
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="trimester-labels">
-          <span id="t1">1st Trimester</span>
-          <span id="t2">2nd Trimester</span>
-          <span id="t3">3rd Trimester</span>
+          <span id="t1" data-i18n="dash.t1">1st Trimester</span>
+          <span id="t2" data-i18n="dash.t2">2nd Trimester</span>
+          <span id="t3" data-i18n="dash.t3">3rd Trimester</span>
         </div>
       </div>
 
       <div class="location-box">
         <span class="material-symbols-outlined">location_on</span>
         <div>
-          <small>Location</small>
+          <small data-i18n="dash.location">Location</small>
           <strong id="locationText">Not set</strong>
         </div>
       </div>
@@ -106,7 +109,7 @@
       <span class="ask-icon">
         <span class="material-symbols-outlined">chat</span>
       </span>
-      <span class="ask-text">Ask a Maternal Health Question</span>
+      <span class="ask-text" data-i18n="dash.ask">Ask a Maternal Health Question</span>
       <span class="material-symbols-outlined">arrow_forward</span>
     </a>
 
@@ -115,8 +118,8 @@
         <span class="material-symbols-outlined">medical_services</span>
       </span>
       <div>
-        <strong>EMERGENCY NOTICE</strong>
-        <p>If symptoms persist, please seek professional medical care in a hospital.</p>
+        <strong data-i18n="dash.emergency">EMERGENCY NOTICE</strong>
+        <p data-i18n="dash.emergencyText">If symptoms persist, please seek professional medical care in a hospital.</p>
       </div>
     </div>
   </main>

@@ -1,3 +1,6 @@
+// Words shown to the user come from translations.js. T("key") gives the text in the chosen language.
+const T = window.t || function (key) { return key; };
+
 // The email she registered with is kept for this tab only
 let pendingEmail = '';
 try {
@@ -45,8 +48,6 @@ async function post(url, body) {
   return { ok: response.ok, data: data };
 }
 
-const NETWORK_ERROR = 'Could not reach the server. Please check your connection and try again.';
-
 // Verify
 form.addEventListener('submit', async function (event) {
   event.preventDefault();
@@ -55,7 +56,7 @@ form.addEventListener('submit', async function (event) {
 
   const code = codeInput.value.trim();
   if (!/^\d{6}$/.test(code)) {
-    error.textContent = 'Please enter the 6-digit code from your email.';
+    error.textContent = T('verify.enterCode');
     return;
   }
 
@@ -73,34 +74,43 @@ form.addEventListener('submit', async function (event) {
       window.location.href = 'dashboard.html';
       return;
     }
-    error.textContent = result.data.error || 'Something went wrong. Please try again.';
+    error.textContent = result.data.error || T('auth.generic');
   } catch (e) {
-    error.textContent = NETWORK_ERROR;
+    error.textContent = T('auth.network');
   }
 
   verifyBtn.disabled = false;
 });
 
-// Resend, with a 60 second wait 
+// Resend, with a 60 second wait
 let waitTimer = null;
+let secondsLeft = 0;
+
+// Shows "Resend code (45s)" while waiting, and "Resend code" when ready
+function showResendLabel() {
+  resendBtn.textContent = secondsLeft > 0
+    ? T('verify.resend') + ' (' + secondsLeft + T('verify.sec') + ')'
+    : T('verify.resend');
+}
 
 function startWait(seconds) {
-  let left = seconds;
+  secondsLeft = seconds;
   resendBtn.disabled = true;
-  resendBtn.textContent = 'Resend code (' + left + 's)';
+  showResendLabel();
 
   clearInterval(waitTimer);
   waitTimer = setInterval(function () {
-    left -= 1;
-    if (left <= 0) {
+    secondsLeft -= 1;
+    if (secondsLeft <= 0) {
       clearInterval(waitTimer);
       resendBtn.disabled = false;
-      resendBtn.textContent = 'Resend code';
-    } else {
-      resendBtn.textContent = 'Resend code (' + left + 's)';
     }
+    showResendLabel();
   }, 1000);
 }
+
+// If the language is changed on this page, redraw the button text
+document.addEventListener('bloom:langchange', showResendLabel);
 
 // A code was just sent, so start with the wait already running
 startWait(60);
@@ -112,8 +122,8 @@ resendBtn.addEventListener('click', async function () {
 
   try {
     await post('/api/resend-code', { email: pendingEmail });
-    success.textContent = 'A new code is on its way. It can take a minute.';
+    success.textContent = T('verify.resent');
   } catch (e) {
-    error.textContent = NETWORK_ERROR;
+    error.textContent = T('auth.network');
   }
 });

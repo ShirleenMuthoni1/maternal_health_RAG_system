@@ -1,20 +1,20 @@
-
 /* ===== Accessibility settings: button, panel, and the three settings ===== */
- 
+
 /* Clear keyboard focus ring on every page */
 :focus-visible { outline: 3px solid #0b5155; outline-offset: 2px; }
- 
+
 /* The button that opens the panel */
 .a11y-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
+  gap: 6px;
   background: none;
   border: 1px solid #cfd8d8;
-  border-radius: 50%;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: var(--primary);
   cursor: pointer;
 }
@@ -25,7 +25,7 @@
 .app-header .a11y-btn { margin-left: auto; }
 /* On pages that have a Log out button, Log out already takes the right side */
 .app-header .logout-btn ~ .a11y-btn { margin-left: 0; }
- 
+
 /* Used only on pages that have no top bar (for example the home page) */
 .a11y-btn.a11y-floating {
   position: fixed;
@@ -34,7 +34,7 @@
   z-index: 1000;
   background: #ffffff;
 }
- 
+
 /* The panel */
 .a11y-panel {
   position: fixed;
@@ -49,7 +49,12 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
 }
 .a11y-panel[hidden] { display: none; }
-.a11y-panel h2 { font-size: 1rem; margin-bottom: 12px; }
+.a11y-panel { max-height: calc(100vh - 80px); overflow-y: auto; }
+.a11y-panel .a11y-main-title { font-size: 1.125rem; margin-bottom: 4px; }
+/* Each part of the panel (Language, Accessibility) is its own section */
+.a11y-section { padding-top: 14px; margin-top: 12px; border-top: 1px solid #e3e9e9; }
+.a11y-section h3 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+.a11y-section .a11y-row:last-of-type { margin-bottom: 14px; }
 .a11y-row { margin-bottom: 14px; }
 .a11y-row > span { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 6px; }
 .a11y-group { display: flex; gap: 8px; }
@@ -68,10 +73,10 @@
 .a11y-group button[aria-pressed="true"] { background: #0b5155; color: #ffffff; border-color: #0b5155; }
 .a11y-size-label { text-align: center; font-size: 0.8125rem; margin-top: 4px; color: #6b7280; }
 .a11y-reset { width: 100%; margin-top: 4px; }
- 
+
 /* Setting: wider line spacing */
 html.a11y-wide body { line-height: 1.8; }
- 
+
 /* Setting: high contrast */
 html.a11y-contrast {
   --primary: #004045;

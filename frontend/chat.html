@@ -3,37 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Q&amp;A Consultation | Bloom Maternal Care</title>
+  <title data-i18n="chat.doc">Q&amp;A Consultation | Bloom Maternal Care</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/accessibility.css">
   <link rel="stylesheet" href="css/chat.css">
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/guard.js"></script>
-  <script src="js/accessibility.js"></script> 
+  <script src="js/accessibility.js"></script>
 </head>
 <body>
 
   <header class="app-header">
-    <button class="back-btn" id="backBtn" type="button" aria-label="Back to dashboard">
+    <button class="back-btn" id="backBtn" type="button" aria-label="Back to dashboard" data-i18n-aria="chat.back">
       <span class="material-symbols-outlined">arrow_back</span>
     </button>
     <img class="header-logo" src="assets/images/logo.png" alt="Bloom logo">
     <div class="header-text">
       <span class="brand">Bloom Maternal Care</span>
-      <span class="page-title">Q&amp;A Consultation</span>
+      <span class="page-title" data-i18n="chat.page">Q&amp;A Consultation</span>
     </div>
   </header>
 
   <main class="chat-main">
 
-    <section class="context-card" aria-label="Your context information">
+    <section class="context-card" aria-label="Your context information" data-i18n-aria="chat.ctxAria">
       <div class="context-head">
         <div class="context-title">
           <span class="context-icon">
             <span class="material-symbols-outlined">pregnant_woman</span>
           </span>
           <div>
-            <h2>Context Information</h2>
-            <p>Your answers are tailored to these details</p>
+            <h2 data-i18n="chat.ctxTitle">Context Information</h2>
+            <p data-i18n="chat.ctxSub">Your answers are tailored to these details</p>
           </div>
         </div>
       </div>
@@ -44,7 +46,7 @@
             <span class="material-symbols-outlined">calendar_month</span>
           </span>
           <div>
-            <small>Gestational age</small>
+            <small data-i18n="chat.age">Gestational age</small>
             <strong id="ctxWeeks">Not set</strong>
           </div>
         </div>
@@ -54,7 +56,7 @@
             <span class="material-symbols-outlined">spa</span>
           </span>
           <div>
-            <small>Trimester</small>
+            <small data-i18n="chat.trimester">Trimester</small>
             <strong id="ctxTrimester">Not set</strong>
           </div>
         </div>
@@ -64,15 +66,15 @@
             <span class="material-symbols-outlined">location_on</span>
           </span>
           <div>
-            <small>Location</small>
+            <small data-i18n="dash.location">Location</small>
             <strong id="ctxLocation">Not set</strong>
           </div>
         </div>
       </div>
 
       <p class="context-empty" id="contextEmpty" hidden>
-        Complete your profile to get answers that fit you.
-        <a href="profile-setup.html">Set up profile</a>
+        <span data-i18n="chat.complete">Complete your profile to get answers that fit you.</span>
+        <a href="profile-setup.html" data-i18n="chat.setup">Set up profile</a>
       </p>
     </section>
 
@@ -81,8 +83,8 @@
 
   <div class="chat-input-bar">
     <form id="chatForm" autocomplete="off">
-      <input type="text" id="questionInput" placeholder="Type your maternal health question..." aria-label="Your question">
-      <button type="submit" class="send-btn" id="sendBtn" aria-label="Send question">
+      <input type="text" id="questionInput" placeholder="Type your maternal health question..." data-i18n-placeholder="chat.inputPh" aria-label="Your question" data-i18n-aria="chat.inputAria">
+      <button type="submit" class="send-btn" id="sendBtn" aria-label="Send question" data-i18n-aria="chat.sendAria">
         <span class="material-symbols-outlined">send</span>
       </button>
     </form>

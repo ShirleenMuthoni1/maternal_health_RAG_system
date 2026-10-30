@@ -1,3 +1,6 @@
+// Words shown to the user come from translations.js. T("key") gives the text in the chosen language.
+const T = window.t || function (key) { return key; };
+
 // Back arrow in the top bar: log in and register both go back to the welcome page
 const backBtn = document.getElementById('backBtn');
 if (backBtn) {
@@ -48,8 +51,6 @@ function rememberPendingEmail(email) {
   }
 }
 
-const NETWORK_ERROR = 'Could not reach the server. Please check your connection and try again.';
-
 //  Log in form 
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
@@ -63,11 +64,11 @@ if (loginForm) {
     const error = document.getElementById('formError');
 
     if (!email || !password) {
-      error.textContent = 'Please enter your email and password.';
+      error.textContent = T('auth.enterEmailPassword');
       return;
     }
     if (!emailLooksValid(email)) {
-      error.textContent = 'Please enter a valid email address.';
+      error.textContent = T('auth.invalidEmail');
       return;
     }
 
@@ -94,9 +95,9 @@ if (loginForm) {
         return;
       }
 
-      error.textContent = result.data.error || 'Something went wrong. Please try again.';
+      error.textContent = result.data.error || T('auth.generic');
     } catch (e) {
-      error.textContent = NETWORK_ERROR;
+      error.textContent = T('auth.network');
     }
 
     submitBtn.disabled = false;
@@ -117,19 +118,19 @@ if (registerForm) {
     const error = document.getElementById('formError');
 
     if (!email || !password || !confirmPassword) {
-      error.textContent = 'Please fill in all the fields.';
+      error.textContent = T('auth.fillAll');
       return;
     }
     if (!emailLooksValid(email)) {
-      error.textContent = 'Please enter a valid email address.';
+      error.textContent = T('auth.invalidEmail');
       return;
     }
     if (password.length < 8) {
-      error.textContent = 'Your password must be at least 8 characters.';
+      error.textContent = T('auth.pwShort');
       return;
     }
     if (password !== confirmPassword) {
-      error.textContent = 'The two passwords do not match.';
+      error.textContent = T('auth.pwMismatch');
       return;
     }
 
@@ -151,9 +152,9 @@ if (registerForm) {
         return;
       }
 
-      error.textContent = result.data.error || 'Something went wrong. Please try again.';
+      error.textContent = result.data.error || T('auth.generic');
     } catch (e) {
-      error.textContent = NETWORK_ERROR;
+      error.textContent = T('auth.network');
     }
 
     submitBtn.disabled = false;

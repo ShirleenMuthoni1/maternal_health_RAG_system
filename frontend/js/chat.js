@@ -1,3 +1,6 @@
+// Words shown to the user come from translations.js. T("key") gives the text in the chosen language.
+const T = window.t || function (key) { return key; };
+
 // Back arrow in the top bar goes to the dashboard
 document.getElementById('backBtn').addEventListener('click', function () {
   window.location.href = 'dashboard.html';
@@ -8,9 +11,37 @@ const chatForm = document.getElementById('chatForm');
 const questionInput = document.getElementById('questionInput');
 const sendBtn = document.getElementById('sendBtn');
 
-// Context information card (loaded from the backend)
-function ordinal(n) {
-  return n === 1 ? '1st' : n === 2 ? '2nd' : '3rd';
+// ----- Context information card (loaded from the backend) -----
+// The mother's saved profile (null if she has none or the server could not be reached)
+let savedProfile = null;
+
+// Writes the three chips in the chosen language. Runs on load and when the language changes.
+function drawContext() {
+  const weeksEl = document.getElementById('ctxWeeks');
+  const trimesterEl = document.getElementById('ctxTrimester');
+  const locationEl = document.getElementById('ctxLocation');
+
+  if (!savedProfile) {
+    weeksEl.textContent = T('dash.notSet');
+    trimesterEl.textContent = T('dash.notSet');
+    locationEl.textContent = T('dash.notSet');
+    return;
+  }
+
+  const weeks = Number(savedProfile.gestationalAge);
+  const trimester = weeks <= 13 ? 1 : weeks <= 27 ? 2 : 3;
+
+  weeksEl.textContent = weeks + ' ' + T(weeks === 1 ? 'profile.week' : 'profile.weeks');
+  trimesterEl.textContent = T('chat.trimFmt').replace('{n}', T('dash.ord' + trimester));
+
+  if (savedProfile.location === 'Other') {
+    locationEl.textContent = T('profile.other');
+  } else if (savedProfile.location) {
+    // "Nairobi, Kenya" is shown as "Nairobi"
+    locationEl.textContent = savedProfile.location.split(',')[0];
+  } else {
+    locationEl.textContent = T('dash.notSet');
+  }
 }
 
 async function loadContext() {
@@ -18,29 +49,27 @@ async function loadContext() {
     const response = await fetch('/api/profile');
 
     if (response.ok) {
-      const profile = await response.json();
-      const weeks = Number(profile.gestationalAge);
-      const trimester = weeks <= 13 ? 1 : weeks <= 27 ? 2 : 3;
-
-      document.getElementById('ctxWeeks').textContent = weeks + (weeks === 1 ? ' week' : ' weeks');
-      document.getElementById('ctxTrimester').textContent = ordinal(trimester) + ' Trimester';
-
-      if (profile.location) {
-        // "Nairobi, Kenya" is shown as "Nairobi"
-        document.getElementById('ctxLocation').textContent = profile.location.split(',')[0];
-      }
+      savedProfile = await response.json();
+      drawContext();
       return;
     }
   } catch (e) {
     // If the server cannot be reached, the card keeps its "Not set" text
   }
 
+  drawContext();
   document.getElementById('contextEmpty').hidden = false;
 }
 
+drawContext();
 loadContext();
 
-// Helpers that draw the message bubbles
+// If the language is changed on this page, redraw the chips
+document.addEventListener('bloom:langchange', drawContext);
+
+// ----- Helpers that draw the message bubbles -----
+// Bubbles that hold fixed words (thinking, sources label, danger alert) carry data-i18n,
+// so they change language by themselves. Questions and answers are shown as they are.
 function timeNow() {
   return new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 }
@@ -54,6 +83,14 @@ function makeIcon(name) {
   icon.className = 'material-symbols-outlined';
   icon.textContent = name;
   return icon;
+}
+
+// Creates an element whose words come from translations.js
+function makeText(tag, key) {
+  const element = document.createElement(tag);
+  element.setAttribute('data-i18n', key);
+  element.textContent = T(key);
+  return element;
 }
 
 function addUserMessage(text) {
@@ -77,9 +114,8 @@ function addUserMessage(text) {
 }
 
 function addThinking() {
-  const bubble = document.createElement('div');
+  const bubble = makeText('div', 'chat.thinking');
   bubble.className = 'msg-thinking';
-  bubble.textContent = 'Looking through trusted maternal health sources...';
   messages.appendChild(bubble);
   scrollToBottom();
   return bubble;
@@ -99,10 +135,9 @@ function addBotMessage(answer, sources) {
     row.appendChild(makeIcon('verified'));
 
     const text = document.createElement('div');
-    const label = document.createElement('strong');
-    label.textContent = 'SOURCES:';
+    const label = makeText('strong', 'chat.sources');
     text.appendChild(label);
-    text.appendChild(document.createTextNode(' ' + sources.join(' \u2022 ')));
+    text.appendChild(document.createTextNode(' ' + sources.join(' • ')));
     row.appendChild(text);
 
     bubble.appendChild(row);
@@ -120,13 +155,9 @@ function addDangerMessage() {
   const title = document.createElement('div');
   title.className = 'danger-title';
   title.appendChild(makeIcon('warning'));
-  const titleText = document.createElement('span');
-  titleText.textContent = 'Danger Sign Detected';
-  title.appendChild(titleText);
+  title.appendChild(makeText('span', 'chat.dangerTitle'));
 
-  const message = document.createElement('p');
-  message.textContent =
-    'These symptoms indicate an emergency. Please seek immediate medical care at the nearest hospital or emergency health facility right now.';
+  const message = makeText('p', 'chat.dangerText');
 
   bubble.appendChild(title);
   bubble.appendChild(message);
@@ -151,11 +182,12 @@ function saveRecentQuestion(question) {
 // Later, replace this whole function with a call to the chat API, which will
 // check for danger signs and run the RAG pipeline (retrieval and the LLM).
 // The real danger sign check belongs in the backend and must be tested properly.
-// This keyword list only lets you see both screens. 
+// This keyword list only lets you see both screens (English and a few Kiswahili phrases).
 const DEMO_DANGER_WORDS = [
   'heavy bleeding', 'severe headache', 'convulsion', 'seizure',
   'blurred vision', 'severe abdominal pain', 'severe lower abdominal pain',
-  'baby is not moving', 'no fetal movement', 'reduced fetal movement'
+  'baby is not moving', 'no fetal movement', 'reduced fetal movement',
+  'kutokwa na damu nyingi', 'kichwa kuuma sana', 'degedege', 'mtoto hasogei'
 ];
 
 function askBackend(question) {
@@ -171,10 +203,7 @@ function askBackend(question) {
       } else {
         resolve({
           danger: false,
-          answer:
-            'This is a placeholder answer while the backend is being built. In the finished system, ' +
-            'the response will be generated from the trusted maternal health sources in the knowledge base, ' +
-            'using your gestational age and location.',
+          answer: T('chat.placeholder'),
           sources: ['Sample source one', 'Sample source two']
         });
       }
@@ -182,7 +211,7 @@ function askBackend(question) {
   });
 }
 
-// Sending a question
+// ----- Sending a question -----
 let waiting = false;
 
 async function ask(question) {

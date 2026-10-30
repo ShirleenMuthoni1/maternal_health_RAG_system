@@ -1,3 +1,6 @@
+// Words shown to the user come from translations.js. T("key") gives the text in the chosen language.
+const T = window.t || function (key) { return key; };
+
 // The email she asked for a code for is kept for this tab only
 let resetEmail = '';
 try {
@@ -56,8 +59,6 @@ async function post(url, body) {
   return { ok: response.ok, data: data };
 }
 
-const NETWORK_ERROR = 'Could not reach the server. Please check your connection and try again.';
-
 // Change the password
 form.addEventListener('submit', async function (event) {
   event.preventDefault();
@@ -69,19 +70,19 @@ form.addEventListener('submit', async function (event) {
   const confirmPassword = document.getElementById('confirmPassword').value;
 
   if (!/^\d{6}$/.test(code)) {
-    error.textContent = 'Please enter the 6-digit code from your email.';
+    error.textContent = T('verify.enterCode');
     return;
   }
   if (!password || !confirmPassword) {
-    error.textContent = 'Please fill in both password fields.';
+    error.textContent = T('reset.fillBoth');
     return;
   }
   if (password.length < 8) {
-    error.textContent = 'Your password must be at least 8 characters.';
+    error.textContent = T('auth.pwShort');
     return;
   }
   if (password !== confirmPassword) {
-    error.textContent = 'The two passwords do not match.';
+    error.textContent = T('auth.pwMismatch');
     return;
   }
 
@@ -100,42 +101,50 @@ form.addEventListener('submit', async function (event) {
       } catch (e) {
         // Ignore storage problems
       }
-      success.textContent = (result.data.message || 'Your password has been changed.') +
-        ' Taking you to the log in page...';
+      success.textContent = T('reset.changed') + ' ' + T('reset.redirecting');
       setTimeout(function () {
         window.location.href = 'login.html';
       }, 2000);
       return;
     }
 
-    error.textContent = result.data.error || 'Something went wrong. Please try again.';
+    error.textContent = result.data.error || T('auth.generic');
   } catch (e) {
-    error.textContent = NETWORK_ERROR;
+    error.textContent = T('auth.network');
   }
 
   resetBtn.disabled = false;
 });
 
-// Resend, with a 60 second wait 
+// Resend, with a 60 second wait
 let waitTimer = null;
+let secondsLeft = 0;
+
+// Shows "Resend code (45s)" while waiting, and "Resend code" when ready
+function showResendLabel() {
+  resendBtn.textContent = secondsLeft > 0
+    ? T('verify.resend') + ' (' + secondsLeft + T('verify.sec') + ')'
+    : T('verify.resend');
+}
 
 function startWait(seconds) {
-  let left = seconds;
+  secondsLeft = seconds;
   resendBtn.disabled = true;
-  resendBtn.textContent = 'Resend code (' + left + 's)';
+  showResendLabel();
 
   clearInterval(waitTimer);
   waitTimer = setInterval(function () {
-    left -= 1;
-    if (left <= 0) {
+    secondsLeft -= 1;
+    if (secondsLeft <= 0) {
       clearInterval(waitTimer);
       resendBtn.disabled = false;
-      resendBtn.textContent = 'Resend code';
-    } else {
-      resendBtn.textContent = 'Resend code (' + left + 's)';
     }
+    showResendLabel();
   }, 1000);
 }
+
+// If the language is changed on this page, redraw the button text
+document.addEventListener('bloom:langchange', showResendLabel);
 
 // A code was just requested, so start with the wait already running
 startWait(60);
@@ -147,8 +156,8 @@ resendBtn.addEventListener('click', async function () {
 
   try {
     await post('/api/forgot-password', { email: resetEmail });
-    success.textContent = 'If an account exists, a new code is on its way. It can take a minute.';
+    success.textContent = T('reset.resent');
   } catch (e) {
-    error.textContent = NETWORK_ERROR;
+    error.textContent = T('auth.network');
   }
 });

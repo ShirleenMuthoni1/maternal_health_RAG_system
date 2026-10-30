@@ -1,3 +1,6 @@
+// Words shown to the user come from translations.js. T("key") gives the text in the chosen language.
+const T = window.t || function (key) { return key; };
+
 const weeksSelect = document.getElementById('gestationalAge');
 const locationSelect = document.getElementById('location');
 const symptomsBox = document.getElementById('symptoms');
@@ -19,13 +22,27 @@ if (backBtn) {
   });
 }
 
-// Fill the weeks dropdown with 1 to 42 weeks
-for (let week = 1; week <= 42; week++) {
-  const option = document.createElement('option');
-  option.value = week;
-  option.textContent = week + (week === 1 ? ' week' : ' weeks');
-  weeksSelect.appendChild(option);
+// Fill the weeks dropdown with 1 to 42 weeks.
+// The saved value is always the number; only the shown words change with the language.
+function fillWeeks() {
+  const chosen = weeksSelect.value;
+  // keep the first option ("Select number of weeks"), remove the rest
+  while (weeksSelect.options.length > 1) {
+    weeksSelect.remove(1);
+  }
+  for (let week = 1; week <= 42; week++) {
+    const option = document.createElement('option');
+    option.value = week;
+    option.textContent = week + ' ' + T(week === 1 ? 'profile.week' : 'profile.weeks');
+    weeksSelect.appendChild(option);
+  }
+  weeksSelect.value = chosen;
 }
+
+fillWeeks();
+
+// If the language is changed on this page, redraw the weeks list
+document.addEventListener('bloom:langchange', fillWeeks);
 
 // Load the saved profile (if there is one) and fill the form
 async function loadProfile() {
@@ -41,7 +58,7 @@ async function loadProfile() {
     }
     // A 404 just means a new mother with no profile yet, so the form stays empty
   } catch (e) {
-    error.textContent = 'Could not load your saved details. Please check your connection.';
+    error.textContent = T('profile.errLoad');
   }
 }
 
@@ -68,7 +85,7 @@ profileForm.addEventListener('submit', async function (event) {
   event.preventDefault();
 
   if (!weeksSelect.value || !locationSelect.value) {
-    error.textContent = 'Please choose your gestational age and your location.';
+    error.textContent = T('profile.errChoose');
     return;
   }
 
@@ -94,9 +111,9 @@ profileForm.addEventListener('submit', async function (event) {
       window.location.href = 'dashboard.html';
       return;
     }
-    error.textContent = result.data.error || 'Something went wrong. Please try again.';
+    error.textContent = result.data.error || T('profile.errWrong');
   } catch (e) {
-    error.textContent = 'Could not reach the server. Please check your connection and try again.';
+    error.textContent = T('profile.errServer');
   }
 
   submitBtn.disabled = false;
