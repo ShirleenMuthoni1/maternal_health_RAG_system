@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Setup | Bloom Maternal Care</title>
+  <title data-i18n="profile.doc">Profile Setup | Bloom Maternal Care</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/accessibility.css">
   <link rel="stylesheet" href="css/auth.css">
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/guard.js"></script>
   <script src="js/accessibility.js"></script>
 </head>
 <body>
 
   <header class="app-header">
-    <button class="back-btn" id="backBtn" type="button" aria-label="Go back">
+    <button class="back-btn" id="backBtn" type="button" aria-label="Go back" data-i18n-aria="auth.back">
       <span class="material-symbols-outlined">arrow_back</span>
     </button>
     <img class="header-logo" src="assets/images/logo.png" alt="Bloom logo">
     <div class="header-text">
       <span class="brand">Bloom Maternal Care</span>
-      <span class="page-title">Profile Setup</span>
+      <span class="page-title" data-i18n="profile.page">Profile Setup</span>
     </div>
   </header>
 
@@ -30,11 +32,11 @@
 
     <span class="badge">
       <span class="material-symbols-outlined">spa</span>
-      Care for Every Trimester
+      <span data-i18n="common.badge">Care for Every Trimester</span>
     </span>
 
-    <h1>Set Up Your Profile</h1>
-    <p class="subtitle">
+    <h1 data-i18n="profile.title">Set Up Your Profile</h1>
+    <p class="subtitle" data-i18n="profile.subtitle">
       Tell us a little about your pregnancy journey and health background so we can tailor the best care for you.
     </p>
 
@@ -42,58 +44,59 @@
       <div class="card-header-row">
         <span class="step-title">
           <span class="step-number">2</span>
-          Step 2: Health &amp; Context Profile
+          <span data-i18n="profile.step">Step 2: Health &amp; Context Profile</span>
         </span>
-        <span class="required-tag">Required *</span>
+        <span class="required-tag" data-i18n="profile.required">Required *</span>
       </div>
 
       <div class="field">
-        <label for="gestationalAge">Gestational Age / Weeks <span class="required">*</span></label>
+        <label for="gestationalAge"><span data-i18n="profile.weeksLabel">Gestational Age / Weeks</span> <span class="required">*</span></label>
         <div class="input-wrap">
           <select id="gestationalAge">
-            <option value="">Select number of weeks</option>
+            <option value="" data-i18n="profile.weeksPh">Select number of weeks</option>
           </select>
           <span class="material-symbols-outlined select-arrow">expand_more</span>
         </div>
       </div>
 
       <div class="field">
-        <label for="location">Location / City <span class="required">*</span></label>
+        <label for="location"><span data-i18n="profile.locLabel">Location / City</span> <span class="required">*</span></label>
         <div class="input-wrap">
           <span class="material-symbols-outlined input-icon">location_on</span>
           <select id="location" class="has-icon">
-            <option value="">Select your city</option>
-            <option>Nairobi, Kenya</option>
-            <option>Mombasa, Kenya</option>
-            <option>Kisumu, Kenya</option>
-            <option>Nakuru, Kenya</option>
-            <option>Eldoret, Kenya</option>
-            <option>Thika, Kenya</option>
-            <option>Machakos, Kenya</option>
-            <option>Nyeri, Kenya</option>
-            <option>Meru, Kenya</option>
-            <option>Kakamega, Kenya</option>
-            <option>Garissa, Kenya</option>
-            <option>Other</option>
+            <option value="" data-i18n="profile.locPh">Select your city</option>
+            <option value="Nairobi, Kenya">Nairobi, Kenya</option>
+            <option value="Mombasa, Kenya">Mombasa, Kenya</option>
+            <option value="Kisumu, Kenya">Kisumu, Kenya</option>
+            <option value="Nakuru, Kenya">Nakuru, Kenya</option>
+            <option value="Eldoret, Kenya">Eldoret, Kenya</option>
+            <option value="Thika, Kenya">Thika, Kenya</option>
+            <option value="Machakos, Kenya">Machakos, Kenya</option>
+            <option value="Nyeri, Kenya">Nyeri, Kenya</option>
+            <option value="Meru, Kenya">Meru, Kenya</option>
+            <option value="Kakamega, Kenya">Kakamega, Kenya</option>
+            <option value="Garissa, Kenya">Garissa, Kenya</option>
+            <!-- The saved value stays "Other" in every language; only the shown word changes -->
+            <option value="Other" data-i18n="profile.other">Other</option>
           </select>
           <span class="material-symbols-outlined select-arrow">expand_more</span>
         </div>
       </div>
 
       <div class="field">
-        <label for="symptoms">Current Symptoms</label>
-        <textarea id="symptoms" placeholder="Describe any nausea, fatigue, cramps, back pain, or physical changes you are currently experiencing..."></textarea>
+        <label for="symptoms" data-i18n="profile.symptomsLabel">Current Symptoms</label>
+        <textarea id="symptoms" placeholder="Describe any nausea, fatigue, cramps, back pain, or physical changes you are currently experiencing..." data-i18n-placeholder="profile.symptomsPh"></textarea>
       </div>
 
       <div class="field">
-        <label for="medicalHistory">Medical History</label>
-        <textarea id="medicalHistory" placeholder="Any pre-existing conditions we should know about..."></textarea>
+        <label for="medicalHistory" data-i18n="profile.historyLabel">Medical History</label>
+        <textarea id="medicalHistory" placeholder="Any pre-existing conditions we should know about..." data-i18n-placeholder="profile.historyPh"></textarea>
       </div>
 
       <p class="form-error" id="formError" role="alert"></p>
 
       <button type="submit" class="btn-primary">
-        Save and Continue
+        <span data-i18n="profile.save">Save and Continue</span>
         <span class="material-symbols-outlined">arrow_forward</span>
       </button>
     </form>

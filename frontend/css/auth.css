@@ -235,3 +235,9 @@
   font-size: 0.875rem;
   color: var(--text);
 }
+
+/* Keep "Lazima *" (Required *) on one line */
+.required-tag {
+  white-space: nowrap;
+  flex-shrink: 0;
+}

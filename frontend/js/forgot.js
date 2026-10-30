@@ -1,3 +1,6 @@
+// Words shown to the user come from translations.js. T("key") gives the text in the chosen language.
+const T = window.t || function (key) { return key; };
+
 // Back arrow in the top bar goes to the log in page
 document.getElementById('backBtn').addEventListener('click', function () {
   window.location.href = 'login.html';
@@ -18,11 +21,11 @@ form.addEventListener('submit', async function (event) {
 
   const email = emailInput.value.trim();
   if (!email) {
-    error.textContent = 'Please enter your email address.';
+    error.textContent = T('forgot.enterEmail');
     return;
   }
   if (!emailLooksValid(email)) {
-    error.textContent = 'Please enter a valid email address.';
+    error.textContent = T('auth.invalidEmail');
     return;
   }
 
@@ -52,9 +55,9 @@ form.addEventListener('submit', async function (event) {
     } catch (e) {
       data = {};
     }
-    error.textContent = data.error || 'Something went wrong. Please try again.';
+    error.textContent = data.error || T('auth.generic');
   } catch (e) {
-    error.textContent = 'Could not reach the server. Please check your connection and try again.';
+    error.textContent = T('auth.network');
   }
 
   sendBtn.disabled = false;
