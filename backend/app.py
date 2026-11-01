@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from functools import wraps
@@ -6,7 +7,8 @@ import bcrypt
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory, session
 
-from models import db, User, ExpectantMother
+from models import db, User, ExpectantMother, Question, Response
+from rag_client import get_answer
 from verification import issue_code, check_code
 from password_reset import reset_bp
 
@@ -44,6 +46,7 @@ MIN_PASSWORD_LENGTH = 8
 MAX_PASSWORD_BYTES = 72  # bcrypt only reads the first 72 bytes of a password
 MAX_LOCATION_LENGTH = 255
 MAX_TEXT_LENGTH = 2000
+MAX_QUESTION_LENGTH = 1000
 
 
 # Password hashing 
@@ -289,6 +292,100 @@ def delete_profile():
     db.session.delete(profile)
     db.session.commit()
     return jsonify(message="Profile deleted.")
+
+
+# Chat: a mother asks a question 
+@app.route("/api/chat", methods=["POST"])
+@login_required
+def chat():
+    user = current_user()
+    data = request.get_json(silent=True) or {}
+
+    question_text = str(data.get("question", "")).strip()
+    language = data.get("language")
+    if language not in ("en", "sw"):
+        language = "en"
+
+    if not question_text:
+        return jsonify(error="Please type a question."), 400
+    if len(question_text) > MAX_QUESTION_LENGTH:
+        return jsonify(error="Your question is too long. Please keep it under 1000 characters."), 400
+
+    profile = db.session.get(ExpectantMother, user.email)
+    result = get_answer(question_text, language, profile)
+
+    # Save the question, then the answer that belongs to it
+    question = Question(email=user.email, question_text=question_text, language=language)
+    db.session.add(question)
+    db.session.flush()  # gives the question its id before the answer is saved
+
+    db.session.add(Response(
+        question_id=question.id,
+        answer_text=result["answer"],
+        sources=json.dumps(result["sources"]),
+        is_danger=result["danger"],
+    ))
+    db.session.commit()
+
+    return jsonify(
+        danger=result["danger"],
+        answer=result["answer"],
+        sources=result["sources"],
+    )
+
+
+# Saved questions: the list for the dashboard, one saved conversation, and delete 
+@app.route("/api/questions", methods=["GET"])
+@login_required
+def list_questions():
+    user = current_user()
+    rows = (
+        Question.query.filter_by(email=user.email)
+        .order_by(Question.created_at.desc(), Question.id.desc())
+        .limit(10)
+        .all()
+    )
+    return jsonify([{"id": q.id, "question": q.question_text} for q in rows])
+
+
+@app.route("/api/questions/<int:question_id>", methods=["GET"])
+@login_required
+def get_question(question_id):
+    user = current_user()
+    question = db.session.get(Question, question_id)
+
+    # A mother can only open her own questions
+    if question is None or question.email != user.email:
+        return jsonify(error="Question not found."), 404
+
+    response = Response.query.filter_by(question_id=question.id).first()
+    sources = json.loads(response.sources) if response and response.sources else []
+
+    return jsonify(
+        id=question.id,
+        question=question.question_text,
+        createdAt=question.created_at.isoformat(),
+        danger=bool(response and response.is_danger),
+        answer=response.answer_text if response else None,
+        sources=sources,
+    )
+
+
+@app.route("/api/questions/<int:question_id>", methods=["DELETE"])
+@login_required
+def delete_question(question_id):
+    user = current_user()
+    question = db.session.get(Question, question_id)
+
+    # A mother can only delete her own questions
+    if question is None or question.email != user.email:
+        return jsonify(error="Question not found."), 404
+
+    # Delete the answer first, then the question it belongs to
+    Response.query.filter_by(question_id=question.id).delete()
+    db.session.delete(question)
+    db.session.commit()
+    return jsonify(message="Conversation deleted.")
 
 
 if __name__ == "__main__":

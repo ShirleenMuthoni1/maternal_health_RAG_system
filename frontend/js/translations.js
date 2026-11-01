@@ -44,6 +44,11 @@ window.TRANSLATIONS = {
     "dash.ord2": "2nd",
     "dash.ord3": "3rd",
     "dash.noQuestions": "No questions yet. Your recent questions will appear here.",
+    "dash.delete": "Delete conversation",
+    "dash.confirmDelete": "Delete this conversation?",
+    "dash.deleteYes": "Delete",
+    "dash.cancel": "Cancel",
+    "dash.deleteFailed": "Could not delete. Please try again.",
     "dash.sample1": "Should I continue taking folic acid supplements during this trimester?",
     "dash.sample2": "How should I prepare for labor and delivery plan in Nairobi?",
     "dash.t1": "1st Trimester",
@@ -205,7 +210,8 @@ window.TRANSLATIONS = {
     "chat.sources": "SOURCES:",
     "chat.dangerTitle": "Danger Sign Detected",
     "chat.dangerText": "These symptoms indicate an emergency. Please seek immediate medical care at the nearest hospital or emergency health facility right now.",
-    "chat.placeholder": "This is a placeholder answer while the backend is being built. In the finished system, the response will be generated from the trusted maternal health sources in the knowledge base, using your gestational age and location."
+    "chat.placeholder": "This is a placeholder answer while the backend is being built. In the finished system, the response will be generated from the trusted maternal health sources in the knowledge base, using your gestational age and location.",
+    "chat.notFound": "This conversation could not be found."
   },
 
   sw: {
@@ -251,6 +257,11 @@ window.TRANSLATIONS = {
     "dash.ord2": "2",
     "dash.ord3": "3",
     "dash.noQuestions": "Bado hakuna maswali. Maswali yako ya hivi karibuni yataonekana hapa.",
+    "dash.delete": "Futa mazungumzo",
+    "dash.confirmDelete": "Futa mazungumzo haya?",
+    "dash.deleteYes": "Futa",
+    "dash.cancel": "Ghairi",
+    "dash.deleteFailed": "Imeshindwa kufuta. Tafadhali jaribu tena.",
     "dash.sample1": "Je, niendelee kutumia virutubisho vya folic acid katika trimesta hii?",
     "dash.sample2": "Nijiandaeje kwa mpango wa leba na kujifungua jijini Nairobi?",
     "dash.t1": "Trimesta ya 1",
@@ -412,6 +423,7 @@ window.TRANSLATIONS = {
     "chat.sources": "VYANZO:",
     "chat.dangerTitle": "Dalili za Hatari Zimeonekana",
     "chat.dangerText": "Dalili hizi zinaonyesha dharura. Tafadhali tafuta huduma ya matibabu ya haraka katika hospitali au kituo cha afya cha dharura kilicho karibu nawe sasa hivi.",
-    "chat.placeholder": "Hili ni jibu la mfano wakati mfumo wa nyuma unaandaliwa. Katika mfumo uliokamilika, jibu litatolewa kutoka kwenye vyanzo vya kuaminika vya afya ya uzazi vilivyomo kwenye hifadhi ya maarifa, kwa kutumia umri wa ujauzito wako na mahali ulipo."
+    "chat.placeholder": "Hili ni jibu la mfano wakati mfumo wa nyuma unaandaliwa. Katika mfumo uliokamilika, jibu litatolewa kutoka kwenye vyanzo vya kuaminika vya afya ya uzazi vilivyomo kwenye hifadhi ya maarifa, kwa kutumia umri wa ujauzito wako na mahali ulipo.",
+    "chat.notFound": "Mazungumzo haya hayakupatikana."
   }
 };
