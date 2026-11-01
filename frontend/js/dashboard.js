@@ -74,33 +74,51 @@ async function loadProfile() {
 drawProfile();
 loadProfile();
 
-// ----- Recent questions sidebar -----
-// TEMPORARY: questions are still kept in the browser and will move to the database
-// when the chat page is connected to the backend. The sample questions only let
-// you see the design.
-const USE_SAMPLES = true;
-// Sample questions are looked up by key so they also change language
-const SAMPLE_KEYS = ['dash.sample1', 'dash.sample2'];
+// Recent questions sidebar
+// The list comes from the database: the mother's last 10 questions.
+const list = document.getElementById('questionList');
 
-let savedQuestions = [];
-try {
-  savedQuestions = JSON.parse(localStorage.getItem('bloomRecentQuestions')) || [];
-} catch (e) {
-  savedQuestions = [];
+// Questions are kept here so the list can be redrawn (after a delete or a language change)
+let recentQuestions = [];
+// The id of the question that is asking "Delete this conversation?" (null = none)
+let confirmingId = null;
+
+function makeButton(text, className, onClick) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = className;
+  button.textContent = text;
+  button.addEventListener('click', onClick);
+  return button;
 }
 
-const list = document.getElementById('questionList');
+// Removes one conversation from the database, then from the list
+async function deleteQuestion(id) {
+  try {
+    const response = await fetch('/api/questions/' + id, { method: 'DELETE' });
+    if (response.ok || response.status === 404) {
+      recentQuestions = recentQuestions.filter(function (q) { return q.id !== id; });
+      confirmingId = null;
+      drawQuestions();
+      return;
+    }
+  } catch (e) {
+    // handled below
+  }
+  alertDeleteFailed();
+}
+
+function alertDeleteFailed() {
+  const note = document.createElement('li');
+  note.className = 'empty-note';
+  note.textContent = T('dash.deleteFailed');
+  list.insertBefore(note, list.firstChild);
+}
 
 function drawQuestions() {
   list.innerHTML = '';
 
-  // Questions the mother really asked stay as she typed them; samples are translated
-  let questions = savedQuestions;
-  if (questions.length === 0 && USE_SAMPLES) {
-    questions = SAMPLE_KEYS.map(function (key) { return T(key); });
-  }
-
-  if (questions.length === 0) {
+  if (recentQuestions.length === 0) {
     const note = document.createElement('li');
     note.className = 'empty-note';
     note.textContent = T('dash.noQuestions');
@@ -108,14 +126,44 @@ function drawQuestions() {
     return;
   }
 
-  questions.forEach(function (question) {
-    const item = document.createElement('li');
+  recentQuestions.forEach(function (item) {
+    const row = document.createElement('li');
+
+    // She pressed the bin: ask "are you sure?" in place of this question
+    if (confirmingId === item.id) {
+      const box = document.createElement('div');
+      box.className = 'confirm-box';
+
+      const message = document.createElement('p');
+      message.textContent = T('dash.confirmDelete');
+      box.appendChild(message);
+
+      const actions = document.createElement('div');
+      actions.className = 'confirm-actions';
+      actions.appendChild(makeButton(T('dash.cancel'), 'confirm-no', function () {
+        confirmingId = null;
+        drawQuestions();
+      }));
+      actions.appendChild(makeButton(T('dash.deleteYes'), 'confirm-yes', function () {
+        deleteQuestion(item.id);
+      }));
+      box.appendChild(actions);
+
+      row.appendChild(box);
+      list.appendChild(row);
+      return;
+    }
+
+    const line = document.createElement('div');
+    line.className = 'question-row';
+
     const link = document.createElement('a');
     link.className = 'question-link';
-    link.href = 'chat.html?q=' + encodeURIComponent(question);
+    // Opens the saved conversation (it is not asked again)
+    link.href = 'chat.html?id=' + item.id;
 
     const text = document.createElement('span');
-    text.textContent = question;
+    text.textContent = item.question;
 
     const arrow = document.createElement('span');
     arrow.className = 'material-symbols-outlined';
@@ -123,12 +171,42 @@ function drawQuestions() {
 
     link.appendChild(text);
     link.appendChild(arrow);
-    item.appendChild(link);
-    list.appendChild(item);
+
+    // The bin button
+    const bin = document.createElement('button');
+    bin.type = 'button';
+    bin.className = 'delete-btn';
+    bin.setAttribute('aria-label', T('dash.delete'));
+    bin.title = T('dash.delete');
+    const binIcon = document.createElement('span');
+    binIcon.className = 'material-symbols-outlined';
+    binIcon.textContent = 'delete';
+    bin.appendChild(binIcon);
+    bin.addEventListener('click', function () {
+      confirmingId = item.id;
+      drawQuestions();
+    });
+
+    line.appendChild(link);
+    line.appendChild(bin);
+    row.appendChild(line);
+    list.appendChild(row);
   });
 }
 
-drawQuestions();
+async function loadQuestions() {
+  try {
+    const response = await fetch('/api/questions');
+    if (response.ok) {
+      recentQuestions = await response.json();
+    }
+  } catch (e) {
+    // If the server cannot be reached, the list stays empty
+  }
+  drawQuestions();
+}
+
+loadQuestions();
 
 // If the language is changed on this page, redraw everything this file writes
 document.addEventListener('bloom:langchange', function () {
@@ -136,7 +214,7 @@ document.addEventListener('bloom:langchange', function () {
   drawQuestions();
 });
 
-// ----- Open and close the sidebar -----
+// Open and close the sidebar 
 const sidebar = document.getElementById('sidebar');
 const backdrop = document.getElementById('sidebarBackdrop');
 

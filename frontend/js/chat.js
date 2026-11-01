@@ -11,7 +11,7 @@ const chatForm = document.getElementById('chatForm');
 const questionInput = document.getElementById('questionInput');
 const sendBtn = document.getElementById('sendBtn');
 
-// ----- Context information card (loaded from the backend) -----
+// Context information card (loaded from the backend)
 // The mother's saved profile (null if she has none or the server could not be reached)
 let savedProfile = null;
 
@@ -67,7 +67,7 @@ loadContext();
 // If the language is changed on this page, redraw the chips
 document.addEventListener('bloom:langchange', drawContext);
 
-// ----- Helpers that draw the message bubbles -----
+// Helpers that draw the message bubbles 
 // Bubbles that hold fixed words (thinking, sources label, danger alert) carry data-i18n,
 // so they change language by themselves. Questions and answers are shown as they are.
 function timeNow() {
@@ -93,7 +93,7 @@ function makeText(tag, key) {
   return element;
 }
 
-function addUserMessage(text) {
+function addUserMessage(text, when) {
   const bubble = document.createElement('div');
   bubble.className = 'msg-user';
 
@@ -103,7 +103,9 @@ function addUserMessage(text) {
   const meta = document.createElement('div');
   meta.className = 'msg-meta';
   const time = document.createElement('span');
-  time.textContent = timeNow();
+  time.textContent = when
+    ? new Date(when).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+    : timeNow();
   meta.appendChild(time);
   meta.appendChild(makeIcon('done_all'));
 
@@ -165,53 +167,41 @@ function addDangerMessage() {
   scrollToBottom();
 }
 
-// Keep the question for the dashboard's Recent Questions list
-// Temporary: kept in the browser until questions are saved in the database
-function saveRecentQuestion(question) {
+// Sends the question to the backend and returns its reply.
+// The backend checks for danger signs, finds the answer and saves the question.
+async function askBackend(question) {
+  const language = window.bloomI18n ? window.bloomI18n.getLang() : 'en';
+
   try {
-    let saved = JSON.parse(localStorage.getItem('bloomRecentQuestions')) || [];
-    saved = saved.filter(function (q) { return q !== question; });
-    saved.unshift(question);
-    localStorage.setItem('bloomRecentQuestions', JSON.stringify(saved.slice(0, 10)));
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: question, language: language })
+    });
+
+    // Her login has expired, so send her back to log in
+    if (response.status === 401) {
+      window.location.href = 'login.html';
+      return { error: true, message: '' };
+    }
+
+    let data = {};
+    try {
+      data = await response.json();
+    } catch (e) {
+      data = {};
+    }
+
+    if (!response.ok) {
+      return { error: true, message: data.error || T('profile.errWrong') };
+    }
+    return data;
   } catch (e) {
-    // If the browser blocks storage, the question just isn't remembered
+    return { error: true, message: T('profile.errServer') };
   }
 }
 
-// TEMPORARY: stands in for the backend until it exists
-// Later, replace this whole function with a call to the chat API, which will
-// check for danger signs and run the RAG pipeline (retrieval and the LLM).
-// The real danger sign check belongs in the backend and must be tested properly.
-// This keyword list only lets you see both screens (English and a few Kiswahili phrases).
-const DEMO_DANGER_WORDS = [
-  'heavy bleeding', 'severe headache', 'convulsion', 'seizure',
-  'blurred vision', 'severe abdominal pain', 'severe lower abdominal pain',
-  'baby is not moving', 'no fetal movement', 'reduced fetal movement',
-  'kutokwa na damu nyingi', 'kichwa kuuma sana', 'degedege', 'mtoto hasogei'
-];
-
-function askBackend(question) {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      const lower = question.toLowerCase();
-      const isDanger = DEMO_DANGER_WORDS.some(function (word) {
-        return lower.includes(word);
-      });
-
-      if (isDanger) {
-        resolve({ danger: true });
-      } else {
-        resolve({
-          danger: false,
-          answer: T('chat.placeholder'),
-          sources: ['Sample source one', 'Sample source two']
-        });
-      }
-    }, 700);
-  });
-}
-
-// ----- Sending a question -----
+// Sending a question 
 let waiting = false;
 
 async function ask(question) {
@@ -220,13 +210,14 @@ async function ask(question) {
   sendBtn.disabled = true;
 
   addUserMessage(question);
-  saveRecentQuestion(question);
   const thinking = addThinking();
 
   const reply = await askBackend(question);
   thinking.remove();
 
-  if (reply.danger) {
+  if (reply.error) {
+    addBotMessage(reply.message, []);
+  } else if (reply.danger) {
     addDangerMessage();
   } else {
     addBotMessage(reply.answer, reply.sources);
@@ -245,8 +236,34 @@ chatForm.addEventListener('submit', function (event) {
   ask(question);
 });
 
-// If she opened the page from a Recent Questions link, ask that question straight away
-const fromDashboard = new URLSearchParams(window.location.search).get('q');
-if (fromDashboard) {
-  ask(fromDashboard);
+// If she opened the page from the Recent Questions list (chat.html?id=5),
+// show that saved conversation. It is not asked again.
+async function showSavedConversation(id) {
+  try {
+    const response = await fetch('/api/questions/' + id);
+
+    if (response.status === 401) {
+      window.location.href = 'login.html';
+      return;
+    }
+    if (!response.ok) {
+      addBotMessage(T('chat.notFound'), []);
+      return;
+    }
+
+    const saved = await response.json();
+    addUserMessage(saved.question, saved.createdAt);
+    if (saved.danger) {
+      addDangerMessage();
+    } else {
+      addBotMessage(saved.answer, saved.sources);
+    }
+  } catch (e) {
+    addBotMessage(T('profile.errServer'), []);
+  }
+}
+
+const savedId = new URLSearchParams(window.location.search).get('id');
+if (savedId) {
+  showSavedConversation(savedId);
 }

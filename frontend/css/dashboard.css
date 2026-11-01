@@ -355,3 +355,71 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+/* One question in the sidebar: the link and its bin button side by side */
+.question-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.question-row .question-link {
+  flex: 1;
+  min-width: 0;
+}
+
+.delete-btn {
+  flex-shrink: 0;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* "Delete this conversation?" box that replaces the question while she decides */
+.confirm-box {
+  background: var(--danger-bg);
+  border: 1px solid #f3c9c9;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.confirm-box p {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--danger);
+  margin-bottom: 10px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-actions button {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-actions .confirm-yes {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #ffffff;
+}
