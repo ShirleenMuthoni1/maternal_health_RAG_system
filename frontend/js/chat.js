@@ -11,8 +11,8 @@ const chatForm = document.getElementById('chatForm');
 const questionInput = document.getElementById('questionInput');
 const sendBtn = document.getElementById('sendBtn');
 
-// Context information card (loaded from the backend)
-// The mother's saved profile (null if she has none or the server could not be reached)
+// Context information card 
+// The mother's saved profile 
 let savedProfile = null;
 
 // Writes the three chips in the chosen language. Runs on load and when the language changes.
@@ -175,6 +175,10 @@ function addDangerMessage(text) {
   scrollToBottom();
 }
 
+// The conversation this chat belongs to. It stays empty until the first question is
+// answered, then it holds the conversation's id (or the id from the page address).
+let conversationId = null;
+
 // Sends the question to the backend and returns its reply.
 // The backend checks for danger signs, finds the answer and saves the question.
 async function askBackend(question) {
@@ -184,7 +188,7 @@ async function askBackend(question) {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: question, language: language })
+      body: JSON.stringify({ question: question, language: language, conversationId: conversationId })
     });
 
     // The RAG pipeline (Colab) is off or cannot be reached
@@ -228,6 +232,12 @@ async function ask(question) {
   const reply = await askBackend(question);
   thinking.remove();
 
+  if (reply.conversationId && conversationId === null) {
+    // First answer of a new chat: remember it, so a page refresh keeps the conversation
+    conversationId = reply.conversationId;
+    history.replaceState(null, '', 'chat.html?c=' + conversationId);
+  }
+
   if (reply.error) {
     addBotMessage(reply.message, []);
   } else if (reply.danger) {
@@ -249,11 +259,12 @@ chatForm.addEventListener('submit', function (event) {
   ask(question);
 });
 
-// If she opened the page from the Recent Questions list (chat.html?id=5),
-// show that saved conversation. It is not asked again.
+// If she opened the page from the Recent Conversations list,
+// show every question and answer of that conversation. Nothing is asked again,
+// and a new question she types is added to the same conversation.
 async function showSavedConversation(id) {
   try {
-    const response = await fetch('/api/questions/' + id);
+    const response = await fetch('/api/conversations/' + id);
 
     if (response.status === 401) {
       window.location.href = 'login.html';
@@ -265,18 +276,22 @@ async function showSavedConversation(id) {
     }
 
     const saved = await response.json();
-    addUserMessage(saved.question, saved.createdAt);
-    if (saved.danger) {
-      addDangerMessage(saved.answer);
-    } else {
-      addBotMessage(saved.answer, saved.sources);
-    }
+    conversationId = saved.id;
+
+    saved.messages.forEach(function (item) {
+      addUserMessage(item.question, item.createdAt);
+      if (item.danger) {
+        addDangerMessage(item.answer);
+      } else {
+        addBotMessage(item.answer, item.sources);
+      }
+    });
   } catch (e) {
     addBotMessage(T('profile.errServer'), []);
   }
 }
 
-const savedId = new URLSearchParams(window.location.search).get('id');
+const savedId = new URLSearchParams(window.location.search).get('c');
 if (savedId) {
   showSavedConversation(savedId);
 }

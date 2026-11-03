@@ -57,11 +57,32 @@ class VerificationCode(db.Model):
     expires_at = db.Column(db.DateTime(timezone=True), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=utc_now, nullable=False)
 
+
+class Conversation(db.Model):
+    """One chat. It holds the questions a mother asked in it, in order."""
+    __tablename__ = "conversations"
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(
+        db.String(255),
+        db.ForeignKey("users.email", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    created_at = db.Column(db.DateTime(timezone=True), default=utc_now, nullable=False)
+
+
 class Question(db.Model):
-    """One question a mother asked in the chat."""
+    """One question a mother asked in the chat. It belongs to one conversation."""
     __tablename__ = "questions"
 
     id = db.Column(db.Integer, primary_key=True)
+    conversation_id = db.Column(
+        db.Integer,
+        db.ForeignKey("conversations.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     email = db.Column(
         db.String(255),
         db.ForeignKey("users.email", ondelete="CASCADE"),
@@ -87,4 +108,4 @@ class Response(db.Model):
     answer_text = db.Column(db.Text, nullable=True)   # empty when a danger alert was shown
     sources = db.Column(db.Text, nullable=True)       # a list of source names, stored as text
     is_danger = db.Column(db.Boolean, nullable=False, default=False)
-    created_at = db.Column(db.DateTime(timezone=True), default=utc_now, nullable=False)    
+    created_at = db.Column(db.DateTime(timezone=True), default=utc_now, nullable=False)

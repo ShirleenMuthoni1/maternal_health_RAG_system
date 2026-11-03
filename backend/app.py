@@ -7,7 +7,7 @@ import bcrypt
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory, session
 
-from models import db, User, ExpectantMother, Question, Response
+from models import db, User, ExpectantMother, Conversation, Question, Response
 from rag_client import get_answer, RagUnavailable
 from verification import issue_code, check_code
 from password_reset import reset_bp
@@ -294,7 +294,7 @@ def delete_profile():
     return jsonify(message="Profile deleted.")
 
 
-# Chat: a mother asks a question 
+# Chat: a mother asks a question (in a new conversation, or in one she already has) 
 @app.route("/api/chat", methods=["POST"])
 @login_required
 def chat():
@@ -311,6 +311,14 @@ def chat():
     if len(question_text) > MAX_QUESTION_LENGTH:
         return jsonify(error="Your question is too long. Please keep it under 1000 characters."), 400
 
+    # If the page sent a conversation id, the question belongs to that conversation
+    conversation = None
+    conversation_id = data.get("conversationId")
+    if conversation_id is not None:
+        conversation = db.session.get(Conversation, conversation_id) if str(conversation_id).isdigit() else None
+        if conversation is None or conversation.email != user.email:
+            return jsonify(error="Conversation not found."), 404
+
     profile = db.session.get(ExpectantMother, user.email)
     try:
         result = get_answer(question_text, language, profile)
@@ -318,8 +326,19 @@ def chat():
         # Colab is off or unreachable. Nothing is saved, so she can simply ask again.
         return jsonify(error="The assistant is not available right now. Please try again shortly."), 503
 
+    # A first question starts a new conversation
+    if conversation is None:
+        conversation = Conversation(email=user.email)
+        db.session.add(conversation)
+        db.session.flush()  # gives the conversation its id
+
     # Save the question, then the answer that belongs to it
-    question = Question(email=user.email, question_text=question_text, language=language)
+    question = Question(
+        conversation_id=conversation.id,
+        email=user.email,
+        question_text=question_text,
+        language=language,
+    )
     db.session.add(question)
     db.session.flush()  # gives the question its id before the answer is saved
 
@@ -332,62 +351,86 @@ def chat():
     db.session.commit()
 
     return jsonify(
+        conversationId=conversation.id,
         danger=result["danger"],
         answer=result["answer"],
         sources=result["sources"],
     )
 
 
-# Saved questions: the list for the dashboard, one saved conversation, and delete 
-@app.route("/api/questions", methods=["GET"])
+# Conversations: the list for the dashboard, one whole conversation, and delete 
+def own_conversation(conversation_id):
+    """Returns the conversation if it belongs to the logged-in mother, otherwise None."""
+    conversation = db.session.get(Conversation, conversation_id)
+    if conversation is None or conversation.email != current_user().email:
+        return None
+    return conversation
+
+
+@app.route("/api/conversations", methods=["GET"])
 @login_required
-def list_questions():
+def list_conversations():
     user = current_user()
     rows = (
-        Question.query.filter_by(email=user.email)
-        .order_by(Question.created_at.desc(), Question.id.desc())
+        Conversation.query.filter_by(email=user.email)
+        .order_by(Conversation.created_at.desc(), Conversation.id.desc())
         .limit(10)
         .all()
     )
-    return jsonify([{"id": q.id, "question": q.question_text} for q in rows])
+
+    items = []
+    for conversation in rows:
+        # The title of a conversation is its first question
+        first = (
+            Question.query.filter_by(conversation_id=conversation.id)
+            .order_by(Question.id)
+            .first()
+        )
+        if first is not None:
+            items.append({"id": conversation.id, "title": first.question_text})
+    return jsonify(items)
 
 
-@app.route("/api/questions/<int:question_id>", methods=["GET"])
+@app.route("/api/conversations/<int:conversation_id>", methods=["GET"])
 @login_required
-def get_question(question_id):
-    user = current_user()
-    question = db.session.get(Question, question_id)
+def get_conversation(conversation_id):
+    conversation = own_conversation(conversation_id)
+    if conversation is None:
+        return jsonify(error="Conversation not found."), 404
 
-    # A mother can only open her own questions
-    if question is None or question.email != user.email:
-        return jsonify(error="Question not found."), 404
-
-    response = Response.query.filter_by(question_id=question.id).first()
-    sources = json.loads(response.sources) if response and response.sources else []
-
-    return jsonify(
-        id=question.id,
-        question=question.question_text,
-        createdAt=question.created_at.isoformat(),
-        danger=bool(response and response.is_danger),
-        answer=response.answer_text if response else None,
-        sources=sources,
+    questions = (
+        Question.query.filter_by(conversation_id=conversation.id)
+        .order_by(Question.id)
+        .all()
     )
 
+    messages = []
+    for question in questions:
+        response = Response.query.filter_by(question_id=question.id).first()
+        messages.append({
+            "id": question.id,
+            "question": question.question_text,
+            "createdAt": question.created_at.isoformat(),
+            "danger": bool(response and response.is_danger),
+            "answer": response.answer_text if response else None,
+            "sources": json.loads(response.sources) if response and response.sources else [],
+        })
+    return jsonify(id=conversation.id, messages=messages)
 
-@app.route("/api/questions/<int:question_id>", methods=["DELETE"])
+
+@app.route("/api/conversations/<int:conversation_id>", methods=["DELETE"])
 @login_required
-def delete_question(question_id):
-    user = current_user()
-    question = db.session.get(Question, question_id)
+def delete_conversation(conversation_id):
+    conversation = own_conversation(conversation_id)
+    if conversation is None:
+        return jsonify(error="Conversation not found."), 404
 
-    # A mother can only delete her own questions
-    if question is None or question.email != user.email:
-        return jsonify(error="Question not found."), 404
-
-    # Delete the answer first, then the question it belongs to
-    Response.query.filter_by(question_id=question.id).delete()
-    db.session.delete(question) 
+    # Delete the answers, then the questions, then the conversation itself
+    question_ids = [q.id for q in Question.query.filter_by(conversation_id=conversation.id).all()]
+    if question_ids:
+        Response.query.filter(Response.question_id.in_(question_ids)).delete(synchronize_session=False)
+    Question.query.filter_by(conversation_id=conversation.id).delete(synchronize_session=False)
+    db.session.delete(conversation)
     db.session.commit()
     return jsonify(message="Conversation deleted.")
 
