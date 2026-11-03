@@ -211,7 +211,8 @@ window.TRANSLATIONS = {
     "chat.dangerTitle": "Danger Sign Detected",
     "chat.dangerText": "These symptoms indicate an emergency. Please seek immediate medical care at the nearest hospital or emergency health facility right now.",
     "chat.placeholder": "This is a placeholder answer while the backend is being built. In the finished system, the response will be generated from the trusted maternal health sources in the knowledge base, using your gestational age and location.",
-    "chat.notFound": "This conversation could not be found."
+    "chat.notFound": "This conversation could not be found.",
+    "chat.unavailable": "The assistant is not available right now. Please try again in a moment."
   },
 
   sw: {
@@ -424,6 +425,7 @@ window.TRANSLATIONS = {
     "chat.dangerTitle": "Dalili za Hatari Zimeonekana",
     "chat.dangerText": "Dalili hizi zinaonyesha dharura. Tafadhali tafuta huduma ya matibabu ya haraka katika hospitali au kituo cha afya cha dharura kilicho karibu nawe sasa hivi.",
     "chat.placeholder": "Hili ni jibu la mfano wakati mfumo wa nyuma unaandaliwa. Katika mfumo uliokamilika, jibu litatolewa kutoka kwenye vyanzo vya kuaminika vya afya ya uzazi vilivyomo kwenye hifadhi ya maarifa, kwa kutumia umri wa ujauzito wako na mahali ulipo.",
-    "chat.notFound": "Mazungumzo haya hayakupatikana."
+    "chat.notFound": "Mazungumzo haya hayakupatikana.",
+    "chat.unavailable": "Msaidizi hapatikani kwa sasa. Tafadhali jaribu tena baada ya muda mfupi."
   }
 };

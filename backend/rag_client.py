@@ -1,7 +1,21 @@
 # This file is the only place that "gets an answer" for a question.
-# For now it gives a pretend answer. Later it will call the RAG pipeline running in Colab.
+# It sends the question to the RAG pipeline running in Colab and returns the reply.
+#
+# Two lines in backend/.env control it:
+#   RAG_URL=https://something.trycloudflare.com   (the address Colab printed)
+#   RAG_KEY=the-secret-word                       (the same word as RAG_SECRET in Colab)
+# If RAG_URL is empty, a pretend answer is used, so the website still works without Colab.
 
-# TEMPORARY danger words. The real danger check comes with the RAG pipeline.
+import os
+
+import requests
+
+
+class RagUnavailable(Exception):
+    """Raised when the RAG pipeline cannot be reached or gives a bad reply."""
+
+
+# Pretend answers, used only when RAG_URL is empty
 DEMO_DANGER_WORDS = [
     "heavy bleeding", "severe headache", "convulsion", "seizure",
     "blurred vision", "severe abdominal pain", "severe lower abdominal pain",
@@ -11,16 +25,25 @@ DEMO_DANGER_WORDS = [
 
 PLACEHOLDER_ANSWER = {
     "en": (
-        "This is a placeholder answer while the RAG pipeline is being connected. "
-        "In the finished system, the response will be generated from the trusted maternal "
-        "health sources in the knowledge base, using your gestational age and location."
+        "This is a placeholder answer because the RAG pipeline is not connected. "
+        "Set RAG_URL in backend/.env to get real answers."
     ),
     "sw": (
-        "Hili ni jibu la mfano wakati mfumo wa RAG unaunganishwa. "
-        "Katika mfumo uliokamilika, jibu litatolewa kutoka kwenye vyanzo vya kuaminika vya "
-        "afya ya uzazi, kwa kutumia umri wa ujauzito wako na mahali ulipo."
+        "Hili ni jibu la mfano kwa sababu mfumo wa RAG haujaunganishwa. "
+        "Weka RAG_URL kwenye backend/.env ili kupata majibu halisi."
     ),
 }
+
+
+def placeholder_answer(question, language):
+    lower = question.lower()
+    if any(word in lower for word in DEMO_DANGER_WORDS):
+        return {"danger": True, "answer": None, "sources": []}
+    return {
+        "danger": False,
+        "answer": PLACEHOLDER_ANSWER.get(language, PLACEHOLDER_ANSWER["en"]),
+        "sources": ["Sample source one", "Sample source two"],
+    }
 
 
 def get_answer(question, language, profile):
@@ -28,14 +51,34 @@ def get_answer(question, language, profile):
 
     question: what the mother typed
     language: "en" or "sw"
-    profile: her saved profile (weeks, location), or None
+    profile: her saved profile (weeks, location), or None (not used by the pipeline yet)
     """
-    lower = question.lower()
-    if any(word in lower for word in DEMO_DANGER_WORDS):
-        return {"danger": True, "answer": None, "sources": []}
+    url = os.environ.get("RAG_URL", "").strip().rstrip("/")
+    if not url:
+        return placeholder_answer(question, language)
+
+    key = os.environ.get("RAG_KEY", "")
+
+    try:
+        reply = requests.post(
+            url + "/ask",
+            json={"question": question, "language": language},
+            headers={"X-RAG-Key": key},
+            timeout=180,  # a Kiswahili answer can take 10 to 30 seconds
+        )
+    except requests.RequestException:
+        raise RagUnavailable("Could not reach the RAG pipeline.")
+
+    if reply.status_code != 200:
+        raise RagUnavailable("The RAG pipeline replied with status " + str(reply.status_code))
+
+    try:
+        data = reply.json()
+    except ValueError:
+        raise RagUnavailable("The RAG pipeline sent a reply that is not JSON.")
 
     return {
-        "danger": False,
-        "answer": PLACEHOLDER_ANSWER.get(language, PLACEHOLDER_ANSWER["en"]),
-        "sources": ["Sample source one", "Sample source two"],
+        "danger": bool(data.get("danger")),
+        "answer": data.get("answer"),
+        "sources": list(data.get("sources") or []),
     }
