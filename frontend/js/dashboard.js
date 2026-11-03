@@ -74,8 +74,8 @@ async function loadProfile() {
 drawProfile();
 loadProfile();
 
-// Recent questions sidebar
-// The list comes from the database: the mother's last 10 questions.
+// Recent questions sidebar 
+// The list comes from the database: the mother's last 10 conversations (each titled by its first question).
 const list = document.getElementById('questionList');
 
 // Questions are kept here so the list can be redrawn (after a delete or a language change)
@@ -95,7 +95,7 @@ function makeButton(text, className, onClick) {
 // Removes one conversation from the database, then from the list
 async function deleteQuestion(id) {
   try {
-    const response = await fetch('/api/questions/' + id, { method: 'DELETE' });
+    const response = await fetch('/api/conversations/' + id, { method: 'DELETE' });
     if (response.ok || response.status === 404) {
       recentQuestions = recentQuestions.filter(function (q) { return q.id !== id; });
       confirmingId = null;
@@ -159,11 +159,11 @@ function drawQuestions() {
 
     const link = document.createElement('a');
     link.className = 'question-link';
-    // Opens the saved conversation (it is not asked again)
-    link.href = 'chat.html?id=' + item.id;
+    // Opens the whole conversation (nothing is asked again)
+    link.href = 'chat.html?c=' + item.id;
 
     const text = document.createElement('span');
-    text.textContent = item.question;
+    text.textContent = item.title;
 
     const arrow = document.createElement('span');
     arrow.className = 'material-symbols-outlined';
@@ -196,7 +196,7 @@ function drawQuestions() {
 
 async function loadQuestions() {
   try {
-    const response = await fetch('/api/questions');
+    const response = await fetch('/api/conversations');
     if (response.ok) {
       recentQuestions = await response.json();
     }
@@ -214,7 +214,7 @@ document.addEventListener('bloom:langchange', function () {
   drawQuestions();
 });
 
-// Open and close the sidebar 
+// Open and close the sidebar
 const sidebar = document.getElementById('sidebar');
 const backdrop = document.getElementById('sidebarBackdrop');
 
