@@ -149,7 +149,9 @@ function addBotMessage(answer, sources) {
   scrollToBottom();
 }
 
-function addDangerMessage() {
+// text: the alert written by the RAG pipeline (in her language). If there is none,
+// the fixed alert from translations.js is used.
+function addDangerMessage(text) {
   const bubble = document.createElement('div');
   bubble.className = 'msg-danger';
   bubble.setAttribute('role', 'alert');
@@ -159,7 +161,13 @@ function addDangerMessage() {
   title.appendChild(makeIcon('warning'));
   title.appendChild(makeText('span', 'chat.dangerTitle'));
 
-  const message = makeText('p', 'chat.dangerText');
+  let message;
+  if (text) {
+    message = document.createElement('p');
+    message.textContent = text;
+  } else {
+    message = makeText('p', 'chat.dangerText');
+  }
 
   bubble.appendChild(title);
   bubble.appendChild(message);
@@ -178,6 +186,11 @@ async function askBackend(question) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question: question, language: language })
     });
+
+    // The RAG pipeline (Colab) is off or cannot be reached
+    if (response.status === 503) {
+      return { error: true, message: T('chat.unavailable') };
+    }
 
     // Her login has expired, so send her back to log in
     if (response.status === 401) {
@@ -218,7 +231,7 @@ async function ask(question) {
   if (reply.error) {
     addBotMessage(reply.message, []);
   } else if (reply.danger) {
-    addDangerMessage();
+    addDangerMessage(reply.answer);
   } else {
     addBotMessage(reply.answer, reply.sources);
   }
@@ -254,7 +267,7 @@ async function showSavedConversation(id) {
     const saved = await response.json();
     addUserMessage(saved.question, saved.createdAt);
     if (saved.danger) {
-      addDangerMessage();
+      addDangerMessage(saved.answer);
     } else {
       addBotMessage(saved.answer, saved.sources);
     }

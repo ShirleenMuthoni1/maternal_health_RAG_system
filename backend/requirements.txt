@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 bcrypt
 python-dotenv
 psycopg[binary]
+requests

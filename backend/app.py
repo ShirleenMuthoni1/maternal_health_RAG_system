@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory, session
 
 from models import db, User, ExpectantMother, Question, Response
-from rag_client import get_answer
+from rag_client import get_answer, RagUnavailable
 from verification import issue_code, check_code
 from password_reset import reset_bp
 
@@ -312,7 +312,11 @@ def chat():
         return jsonify(error="Your question is too long. Please keep it under 1000 characters."), 400
 
     profile = db.session.get(ExpectantMother, user.email)
-    result = get_answer(question_text, language, profile)
+    try:
+        result = get_answer(question_text, language, profile)
+    except RagUnavailable:
+        # Colab is off or unreachable. Nothing is saved, so she can simply ask again.
+        return jsonify(error="The assistant is not available right now. Please try again shortly."), 503
 
     # Save the question, then the answer that belongs to it
     question = Question(email=user.email, question_text=question_text, language=language)
@@ -383,7 +387,7 @@ def delete_question(question_id):
 
     # Delete the answer first, then the question it belongs to
     Response.query.filter_by(question_id=question.id).delete()
-    db.session.delete(question)
+    db.session.delete(question) 
     db.session.commit()
     return jsonify(message="Conversation deleted.")
 
