@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Report | Bloom Maternal Care</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <img class="header-logo" src="assets/images/logo.png" alt="Bloom logo">
+    <div class="header-text">
+      <span class="brand">Bloom Maternal Care</span>
+      <span class="page-title">Admin Report</span>
+    </div>
+    <button type="button" class="logout-btn" id="logoutBtn">
+      <span class="material-symbols-outlined">logout</span>
+      <span>Log out</span>
+    </button>
+  </header>
+
+  <main class="admin-main">
+
+    <p class="privacy-note">
+      This report shows counts only. It never shows what a mother asked or who she is.
+    </p>
+
+    <form class="filter-bar" id="filterForm">
+      <label>From <input type="text" id="fromDate" placeholder="dd/mm/yyyy" inputmode="numeric" maxlength="10" autocomplete="off"></label>
+      <label>To <input type="text" id="toDate" placeholder="dd/mm/yyyy" inputmode="numeric" maxlength="10" autocomplete="off"></label>
+      <button type="submit" class="apply-btn">Apply</button>
+      <button type="button" class="clear-btn" id="clearBtn">Clear</button>
+    </form>
+
+    <p class="admin-error" id="adminError" role="alert"></p>
+
+    <section class="stat-grid" aria-label="Totals">
+      <div class="stat-card"><span class="stat-number" id="statRegistered">-</span><span class="stat-label">Registered mothers</span></div>
+      <div class="stat-card"><span class="stat-number" id="statActive">-</span><span class="stat-label">Mothers who asked</span></div>
+      <div class="stat-card"><span class="stat-number" id="statQuestions">-</span><span class="stat-label">Questions asked</span></div>
+      <div class="stat-card danger"><span class="stat-number" id="statDanger">-</span><span class="stat-label">Danger alerts shown</span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Questions by language</h2>
+      <div id="languageBars"></div>
+    </section>
+
+    <section class="panel">
+      <h2>What mothers asked about</h2>
+      <p class="panel-note">Each question is counted under the main topic of its answer.</p>
+      <div id="topicBars"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Questions per day</h2>
+      <div id="dayBars"></div>
+    </section>
+
+  </main>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

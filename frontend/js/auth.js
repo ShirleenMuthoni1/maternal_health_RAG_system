@@ -78,8 +78,9 @@ if (loginForm) {
     try {
       const result = await sendToServer('/api/login', { email: email, password: password });
 
-      if (result.ok) {
-        window.location.href = 'dashboard.html';
+        if (result.ok) {
+        // The administrator goes to the report, a mother goes to her dashboard
+        window.location.href = result.data.isAdmin ? 'admin.html' : 'dashboard.html';
         return;
       }
 
