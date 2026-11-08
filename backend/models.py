@@ -16,6 +16,7 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=utc_now, nullable=False)
 
     def __repr__(self):
@@ -108,4 +109,5 @@ class Response(db.Model):
     answer_text = db.Column(db.Text, nullable=True)   # empty when a danger alert was shown
     sources = db.Column(db.Text, nullable=True)       # a list of source names, stored as text
     is_danger = db.Column(db.Boolean, nullable=False, default=False)
+    topic = db.Column(db.String(100), nullable=True)  # the subject of the answer, used by the admin report
     created_at = db.Column(db.DateTime(timezone=True), default=utc_now, nullable=False)

@@ -342,11 +342,20 @@ def chat():
     db.session.add(question)
     db.session.flush()  # gives the question its id before the answer is saved
 
+    # The subject of this answer, used by the admin report (topic names only, never the question)
+    if result["danger"]:
+        topic = "danger signs"
+    elif not result["sources"]:
+        topic = "no information"
+    else:
+        topic = result.get("topic") or "other"
+
     db.session.add(Response(
         question_id=question.id,
         answer_text=result["answer"],
         sources=json.dumps(result["sources"]),
         is_danger=result["danger"],
+        topic=topic,
     ))
     db.session.commit()
 
