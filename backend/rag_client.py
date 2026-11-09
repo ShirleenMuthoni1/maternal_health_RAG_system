@@ -47,7 +47,7 @@ def placeholder_answer(question, language):
 
 
 def get_answer(question, language, profile):
-    """Returns {"danger": bool, "answer": text or None, "sources": [names]}.
+    """Returns {"danger": bool, "answer": text or None, "sources": [names], "topic": text or None}.
 
     question: what the mother typed
     language: "en" or "sw"
@@ -81,4 +81,5 @@ def get_answer(question, language, profile):
         "danger": bool(data.get("danger")),
         "answer": data.get("answer"),
         "sources": list(data.get("sources") or []),
-    }
+        "topic": data.get("topic"),
+    } 

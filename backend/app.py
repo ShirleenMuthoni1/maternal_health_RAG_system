@@ -1,11 +1,13 @@
 import json
 import os
 import re
+from datetime import datetime, timedelta, timezone
 from functools import wraps
 
 import bcrypt
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory, session
+from sqlalchemy import func
 
 from models import db, User, ExpectantMother, Conversation, Question, Response
 from rag_client import get_answer, RagUnavailable
@@ -75,6 +77,18 @@ def login_required(view):
         if current_user() is None:
             session.clear()
             return jsonify(error="Please log in first."), 401
+        return view(*args, **kwargs)
+    return wrapped
+
+def admin_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        user = current_user()
+        if user is None:
+            session.clear()
+            return jsonify(error="Please log in first."), 401
+        if not user.is_admin:
+            return jsonify(error="This page is for the system administrator only."), 403
         return view(*args, **kwargs)
     return wrapped
 
@@ -186,7 +200,7 @@ def login():
 
     session.clear()
     session["user_id"] = user.id
-    return jsonify(message="Logged in.", email=user.email)
+    return jsonify(message="Logged in.", email=user.email, isAdmin=bool(user.is_admin))
 
 
 @app.route("/api/logout", methods=["POST"])
@@ -199,7 +213,7 @@ def logout():
 @login_required
 def me():
     user = current_user()
-    return jsonify(email=user.email)
+    return jsonify(email=user.email, isAdmin=bool(user.is_admin))
 
 
 # Context information (the mother's profile) 
@@ -299,6 +313,8 @@ def delete_profile():
 @login_required
 def chat():
     user = current_user()
+    if user.is_admin:
+        return jsonify(error="The administrator account cannot ask questions."), 403
     data = request.get_json(silent=True) or {}
 
     question_text = str(data.get("question", "")).strip()
@@ -342,11 +358,20 @@ def chat():
     db.session.add(question)
     db.session.flush()  # gives the question its id before the answer is saved
 
+    # The subject of this answer, used by the admin report (topic names only, never the question)
+    if result["danger"]:
+        topic = "danger signs"
+    elif not result["sources"]:
+        topic = "no information"
+    else:
+        topic = result.get("topic") or "other"
+
     db.session.add(Response(
         question_id=question.id,
         answer_text=result["answer"],
         sources=json.dumps(result["sources"]),
         is_danger=result["danger"],
+        topic=topic,
     ))
     db.session.commit()
 
@@ -433,6 +458,97 @@ def delete_conversation(conversation_id):
     db.session.delete(conversation)
     db.session.commit()
     return jsonify(message="Conversation deleted.")
+
+
+# Admin report: counts only. No question text, names or emails are ever returned here.
+def read_date(text):
+    """'2026-11-08' becomes a date. Returns None when empty. Raises ValueError when wrong."""
+    text = str(text or "").strip()
+    if not text:
+        return None
+    return datetime.strptime(text, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+
+
+@app.route("/api/admin/summary", methods=["GET"])
+@admin_required
+def admin_summary():
+    try:
+        start = read_date(request.args.get("from"))
+        end = read_date(request.args.get("to"))
+    except ValueError:
+        return jsonify(error="Dates must look like 2026-11-08."), 400
+
+    # Every count below only looks at questions inside the chosen dates
+    conditions = []
+    if start is not None:
+        conditions.append(Question.created_at >= start)
+    if end is not None:
+        conditions.append(Question.created_at < end + timedelta(days=1))
+
+    total_questions = db.session.query(func.count(Question.id)).filter(*conditions).scalar()
+
+    danger_alerts = (
+        db.session.query(func.count(Response.id))
+        .join(Question, Question.id == Response.question_id)
+        .filter(*conditions, Response.is_danger.is_(True))
+        .scalar()
+    )
+
+    active_mothers = (
+        db.session.query(func.count(func.distinct(Question.email)))
+        .filter(*conditions)
+        .scalar()
+    )
+
+    registered_mothers = (
+        db.session.query(func.count(User.id))
+        .filter(User.is_verified.is_(True), User.is_admin.is_(False))
+        .scalar()
+    )
+
+    languages = {"en": 0, "sw": 0}
+    for language, count in (
+        db.session.query(Question.language, func.count(Question.id))
+        .filter(*conditions)
+        .group_by(Question.language)
+        .all()
+    ):
+        languages[language] = count
+
+    topic_count = func.count(Response.id)
+    topics = [
+        {"topic": topic or "not recorded", "count": count}
+        for topic, count in (
+            db.session.query(Response.topic, topic_count)
+            .join(Question, Question.id == Response.question_id)
+            .filter(*conditions)
+            .group_by(Response.topic)
+            .order_by(topic_count.desc())
+            .all()
+        )
+    ]
+
+    day = func.date(Question.created_at)
+    per_day = [
+        {"date": str(d), "count": count}
+        for d, count in (
+            db.session.query(day, func.count(Question.id))
+            .filter(*conditions)
+            .group_by(day)
+            .order_by(day)
+            .all()
+        )
+    ]
+
+    return jsonify(
+        totalQuestions=total_questions,
+        dangerAlerts=danger_alerts,
+        activeMothers=active_mothers,
+        registeredMothers=registered_mothers,
+        languages=languages,
+        topics=topics,
+        perDay=per_day,
+    )
 
 
 if __name__ == "__main__":
